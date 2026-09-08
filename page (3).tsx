@@ -1,0 +1,2 @@
+import Link from "next/link";import NewCaseForm from "@/components/NewCaseForm";
+export default function NewCasePage(){return <main className="shell"><div className="topbar"><Link className="back" href="/">← Zurück</Link></div><section className="hero"><span className="pill">Neue Schadenakte</span><h1>Wasserschaden anlegen</h1><p className="muted">Grunddaten einmal erfassen und später für Bericht, Rapporte, Energieverbrauch, Angebote und Rechnungen weiterverwenden.</p></section><NewCaseForm/></main>}
