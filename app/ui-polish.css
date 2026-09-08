@@ -69,3 +69,5 @@ textarea{min-height:78px}
  .runtimeMetrics{grid-template-columns:1fr 1fr 1fr}
  .button{min-height:36px}
 }
+
+.companyPreview{display:grid;grid-template-columns:1fr 1fr;gap:18px;border-top:1px solid var(--line);padding-top:12px;font-size:12px;line-height:1.45}.companyPreview>div:last-child{text-align:right}@media(max-width:600px){.companyPreview{grid-template-columns:1fr}.companyPreview>div:last-child{text-align:left}}

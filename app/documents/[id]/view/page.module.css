@@ -1,57 +1,14 @@
-.screen{background:#eceff1;min-height:100vh;padding:14px 0 28px;color:#111}
-.actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.sheet{width:210mm;min-height:297mm;margin:0 auto;background:#fff;box-sizing:border-box;padding:14mm 14mm 17mm;position:relative;font-family:Arial,Helvetica,sans-serif;font-size:11.2pt;line-height:1.18;box-shadow:0 2px 18px rgba(0,0,0,.16)}
-.header{height:31mm;position:relative}
-.logo{display:block;margin-left:auto;width:auto;max-width:73mm;max-height:27mm;object-fit:contain}
-.headerLine{position:absolute;left:0;right:0;bottom:0;border-bottom:1.3px solid #111}
-.addressArea{display:grid;grid-template-columns:1fr 66mm;gap:13mm;margin-top:17mm;min-height:55mm}
-.senderLine{display:inline-block;font-size:8.7pt;text-decoration:underline;font-weight:600;margin-bottom:4mm}
-.recipient{font-size:12pt;line-height:1.18}
-.metaTop{font-size:11.3pt;align-self:start;padding-top:18mm}
-.delivery{margin-bottom:10mm;line-height:1.2}
-.metaDate{line-height:1.28}
-.introStrong{font-size:11.4pt;font-weight:700;margin:6mm 0 8mm}
-.titleArea{display:flex;justify-content:space-between;gap:10mm;align-items:flex-end;border-bottom:1px solid #555;padding-bottom:2mm;margin:5mm 0 4mm}
-.titleArea h1{font-size:18pt;margin:0 0 1mm;font-weight:700}
-.subject{font-size:11.5pt}
-.invoiceMeta{min-width:70mm;text-align:right;font-size:10.8pt;line-height:1.28}
-.invoiceMeta div{display:flex;justify-content:flex-end;gap:3mm}
-.invoiceMeta span{font-weight:400}
-.invoiceMeta strong{font-weight:500}
-.invoiceIntro{margin:0 0 4mm}
-.items{width:100%;border-collapse:collapse;table-layout:fixed}
-.items th{background:#d8d8d8;font-weight:700;border:1px solid #222;padding:2.1mm 1.2mm;text-align:left}
-.items td{border-left:1px solid #222;border-right:1px solid #222;border-bottom:1px solid #222;padding:2.2mm 1.2mm;vertical-align:top}
-.items tbody tr{break-inside:avoid}
-.pos{width:13mm;font-weight:700}
-.description{white-space:pre-line;font-weight:500}
-.price{width:27mm;text-align:right!important;white-space:nowrap}
-.amount{width:26mm;text-align:right!important;white-space:nowrap}
-.sum{width:27mm;text-align:right!important;white-space:nowrap}
-.totals{width:83mm;margin-left:auto;margin-top:2.5mm;border:1px solid #222;border-top:none}
-.totals>div{display:flex;justify-content:space-between;padding:1.6mm 2mm;border-top:1px solid #bbb}
-.totalGrand{font-size:12pt;font-weight:700;background:#f1f1f1}
-.paymentText{margin-top:5mm;font-size:10.5pt}
-.paymentText p{margin:2mm 0}
-.footer{position:absolute;left:14mm;right:14mm;bottom:7mm;border-top:1.2px solid #111;padding-top:2.5mm;display:grid;grid-template-columns:1fr 36mm 1fr;font-size:8.8pt;line-height:1.15}
-.pageNo{text-align:center;align-self:end}
-.footerRight{text-align:right}
-
-@media(max-width:900px){
- .screen{padding:0}
- .sheet{width:100%;min-height:auto;padding:18px;box-shadow:none;font-size:14px}
- .header{height:100px}.logo{max-width:260px;max-height:86px}
- .addressArea{grid-template-columns:1fr;gap:12px;margin-top:28px;min-height:auto}
- .metaTop{padding-top:0}
- .titleArea{align-items:flex-start;flex-direction:column}
- .invoiceMeta{text-align:left;width:100%}.invoiceMeta div{justify-content:flex-start}
- .footer{position:static;margin-top:40px;grid-template-columns:1fr;text-align:left;gap:12px}
- .footerRight{text-align:left}.pageNo{text-align:left}
-}
-
-@media print{
- .screen{background:#fff;padding:0}
- .sheet{width:210mm;min-height:297mm;margin:0;padding:14mm 14mm 17mm;box-shadow:none}
- .items thead{display:table-header-group}
- .items tr{break-inside:avoid}
-}
+.screen{background:#e9ecef;min-height:100vh;padding:14px 0 28px;color:#090909}
+.toolbar{display:flex;justify-content:space-between;margin-bottom:10px}
+.page{width:210mm;height:297mm;margin:0 auto 12px;background:#fff;box-sizing:border-box;padding:12mm 13mm 12mm;position:relative;font-family:Arial,Helvetica,sans-serif;font-size:9.6pt;line-height:1.12;box-shadow:0 2px 14px rgba(0,0,0,.16);overflow:hidden}
+.header{height:39mm;position:relative}.header img{position:absolute;right:0;top:0;width:auto;max-width:78mm;max-height:30mm;object-fit:contain}.rule{position:absolute;left:0;right:0;bottom:3mm;border-bottom:1px solid #222}
+.address{height:45mm}.sender{font-size:7.2pt;text-decoration:underline;margin-bottom:4mm}.recipient{font-size:10pt;line-height:1.08}
+.docHead{display:grid;grid-template-columns:1fr 82mm;gap:8mm;align-items:end;margin-bottom:2mm}.docHead h1{font-size:14.2pt;line-height:1;margin:0 0 1mm;font-weight:700}.meta{font-size:9.2pt}.meta div{display:grid;grid-template-columns:1fr 1fr;gap:2mm}.meta span{text-align:right}.meta strong{text-align:left;font-weight:400}
+.intro{margin:3mm 0 3mm;font-size:9.4pt}.carryTop{text-align:right;font-size:13pt;font-weight:700;margin:1mm 0 5mm}
+.table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:9.2pt}.table th,.table td{border:1px solid #252525;padding:1.2mm 1mm;vertical-align:top}.table th{background:#d7d7d7;font-weight:700;font-size:9.6pt;text-align:left}.pos{width:15mm}.price{width:28mm;text-align:right!important}.amount{width:31mm;text-align:center!important}.sum{width:27mm;text-align:right!important}
+.group td{font-size:11pt;font-weight:700;padding:.8mm 1mm}.item td{min-height:9mm}.item td:nth-child(2){white-space:pre-line}.details{white-space:pre-line;margin-top:1.5mm;font-weight:400}.num{text-align:right;white-space:nowrap}.subtotal td{font-weight:700;padding:.8mm 1mm}.subtotal td:last-child{text-align:right;font-size:10pt}.transfer td{font-weight:700;background:#d7d7d7}.transfer td:last-child{text-align:right}
+.totals{width:91mm;margin-left:auto;border:1px solid #252525;border-top:0;font-size:10pt}.totals>div{display:grid;grid-template-columns:1fr 28mm}.totals span,.totals strong{padding:.5mm 1mm}.totals strong{text-align:right;font-weight:400}.totals .grand{font-weight:700}.totals .grand strong{font-weight:700}
+.payment{margin-top:5mm;font-size:9.4pt}.payment p{margin:0 0 4mm}
+.footer{position:absolute;left:13mm;right:13mm;bottom:5mm;border-top:1px solid #222;padding-top:2mm;display:grid;grid-template-columns:1fr 34mm 1fr;font-size:7.8pt;line-height:1.15}.pageNo{text-align:center;align-self:end}.footerRight{text-align:right}
+@media(max-width:900px){.screen{padding:0}.page{width:100%;height:auto;min-height:100vh;margin:0;padding:16px;overflow:visible;box-shadow:none}.header{height:110px}.address{height:auto;min-height:150px}.docHead{grid-template-columns:1fr}.meta div{grid-template-columns:120px 1fr}.meta span{text-align:left}.footer{position:static;margin-top:36px}.table{font-size:11px}}
+@media print{@page{size:A4;margin:0}.screen{background:#fff;padding:0}.toolbar{display:none!important}.page{width:210mm;height:297mm;margin:0;padding:12mm 13mm 12mm;box-shadow:none;page-break-after:always}.page:last-child{page-break-after:auto}}

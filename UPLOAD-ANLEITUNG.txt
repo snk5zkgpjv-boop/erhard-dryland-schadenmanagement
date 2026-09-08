@@ -1,55 +1,61 @@
-v0.9.3 – SAMMELUPDATE: WORKFLOW + KOMPAKTERE UI + TROCKNUNGSVERBRAUCH
+v0.9.4 – ORIGINAL-LAYOUT + FIRMENDATEN
 
-Diese ZIP ist kumulativ und enthält auch die zuletzt erstellten Änderungen für:
-- neues Angebots-/Rechnungslayout
-- Leistungszeitraum + Liefer-/Leistungsadresse
-- Auftragserteilung, Rapporte und Energieverbrauchsnachweis
+Diese ZIP ist kumulativ und enthält auch die bisherigen Workflow-/Button-Hotfixes.
 
-NEU IN v0.9.3:
-1. Fester Schaden-Ablauf:
-   Schaden -> Angebot -> Auftragserteilung -> Ausführung -> Abschluss -> Rechnung
-   Als sichtbare Workflow-Leiste oben in der Schadenakte.
+DOKUMENTLAYOUT
+Das Angebots-/Rechnungslayout wurde anhand der hochgeladenen Rechnung 2026-1045 neu aufgebaut:
+- Logo oben rechts
+- horizontale Trennlinie unter dem Logo
+- Absenderzeile oberhalb der Empfängeradresse
+- Empfängeradresse links
+- großer Weißraum wie in der Vorlage
+- Rechnung/Angebot links
+- Datum, Leistungszeitraum, Bearbeiter und ggf. Leistungsadresse rechts
+- Positionstabelle mit:
+  Pos | Beschreibung | Einzelpreis € | Menge | Summe €
+- Gruppenüberschriften wie "Trocknung/Geräteeinsatz"
+- Nummerierung 1.1, 2.1 usw.
+- Zwischensummen je Gruppe
+- Übertrag bei Folgeseiten
+- Netto / MwSt / Gesamtbetrag
+- Zahlungstext
+- Fußzeile links mit Kontoinhaber, IBAN, BIC, Steuernummer
+- Fußzeile rechts mit Firma, Anschrift, Telefon und Mobil
+- Seitenzahl mittig
 
-2. Auftragserteilung aus Angebot:
-   Button erzeugt die Auftragserteilung aus dem letzten Angebot.
-   Angebotspositionen werden als beauftragte Maßnahmen übernommen.
-   Auftraggeber-/Versicherungsdaten kommen aus der Schadenakte.
+WICHTIG:
+Im Dokumenteditor gibt es bei jeder Position jetzt "Gruppe / Überschrift".
+Damit kannst du exakt steuern, unter welcher Überschrift die Position in Rechnung/Angebot erscheint.
 
-3. Rechnung aus Angebot:
-   Rechnung kann direkt aus dem bestehenden Angebot erzeugt werden.
-   Positionen und Preise des Angebots werden übernommen.
+FIRMENDATEN
+Neuer Admin-Bereich:
+Startseite -> Firmendaten
 
-4. Tatsächliche Trocknung in Rechnung:
-   "Tatsächliche Trocknung anwenden" ersetzt Trocknungspositionen durch
-   die real erfassten Geräte/Laufzeiten aus dem Schaden.
-   Ein bereits vorhandener Angebotspreis je Einheit wird beibehalten.
+Pro Firma editierbar:
+- Firmenname / rechtlicher Name
+- Anschrift
+- Telefon
+- Mobil
+- E-Mail
+- Webseite
+- Standard-Bearbeiter
+- Kontoinhaber
+- Bank
+- IBAN
+- BIC
+- Steuernummer
+- USt-ID
+- Logo-Pfad / Logo-URL
 
-5. Verbrauch:
-   Eigene Seite "Ausführung & Verbrauch".
-   Pro Gerät:
-   - automatische Laufzeit aus Aufstellung/Abbau
-   - Leistung aus Gerätestamm (W -> kW)
-   - kWh = kW x Tage x 24
-   - Tage, kW oder kWh können überschrieben werden.
-   - GesamtkWh werden oben summiert.
+Die Werte werden automatisch in neue und bereits gespeicherte Dokumentansichten übernommen,
+da Kopf-/Fußzeile beim Öffnen aus den aktuellen Firmendaten gelesen wird.
 
-6. Optik der App:
-   - kleinere Schrift
-   - kompaktere Überschriften
-   - kleinere, weniger klobige Buttons
-   - engere Karten und Formulare
-   - eckigere/ruhigere Tabs
-   - kompaktere Tabellen
-   - mobile Darstellung bleibt erhalten
-
-DATENBANK:
-Die dafür nötigen Verbrauchsfelder wurden bereits produktiv angelegt.
-Keine weitere Migration für dieses Paket nötig.
+KEINE NEUE DATENBANKMIGRATION NÖTIG.
+Die benötigten Firmenfelder und JSON-Konfigurationen existieren bereits.
 
 UPLOAD:
-- ZIP entpacken.
-- Den kompletten Inhalt mit gleicher Ordnerstruktur in GitHub hochladen.
-- Vorhandene Dateien ersetzen.
-- Wichtig: app/ui-polish.css und app/layout.tsx mit hochladen.
-- Commit changes.
-- Vercel-Build abwarten.
+1. ZIP entpacken.
+2. Kompletten Inhalt mit gleicher Ordnerstruktur in GitHub hochladen.
+3. Vorhandene Dateien ersetzen.
+4. Commit changes.
+5. Vercel-Build abwarten.
