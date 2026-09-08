@@ -1,49 +1,18 @@
-# Erhard & Dryland Schadenmanagement
+# Erhard & Dryland Schadenmanagement – v0.5
 
-Erste technische Grundversion der gemeinsamen Web-App für:
+Funktionsumfang:
+- Firmenauswahl Erhard / Dryland
+- Schadensakte
+- Kunde, Objekt, Versicherung, Schadensursache
+- Schadensbilder / Messbilder direkt vom iPhone
+- automatische Bildverkleinerung
+- Feuchtigkeitsmessungen mit Raum, Bauteil, Messverfahren, Gerät, Wert, Einheit, Bewertung
+- technische Trocknung erfassen
+- digitale Rapporte erfassen
+- Energieverbrauch erfassen und berechnen
+- Schadensbericht / Feuchtigkeitsbericht aus der Schadenakte erzeugen
+- Browser-Druckfunktion für PDF-Ausgabe
 
-- Erhard Dienstleistungen
-- Dryland Trocknungstechnik
-
-## Geplante Bereiche
-
-- Firmenauswahl
-- Schadensakten
-- Schadensaufnahme
-- Fotos / Messbilder
-- Feuchtigkeitsmessungen
-- Schadensberichte
-- Technische Trocknung
-- Rapporte
-- Energieverbrauch / Stromverbrauchsnachweis
-- Angebote
-- Rechnungen
-- Auftragserteilung / Abtretung
-- PDF-Erstellung
-
-## Lokaler Start
-
-1. Node.js installieren
-2. `npm install`
-3. `.env.example` nach `.env.local` kopieren
-4. `DATABASE_URL` aus Neon einsetzen
-5. `npm run dev`
-
-## Neon
-
-Die Datei `db/001_initial_schema.sql` enthält ein idempotentes Startschema.
-Sie verwendet überwiegend `CREATE TABLE IF NOT EXISTS`.
-
-## Vercel
-
-In Vercel muss mindestens folgende Environment Variable gesetzt werden:
-
-`DATABASE_URL`
-
-Danach kann das Repository normal deployed werden.
-
-## Aktueller Stand
-
-Version 0.1 ist bewusst ein sauberes Grundgerüst. Die Startseite bietet bereits die Firmenauswahl
-und zeigt die vorgesehenen Module. Die eigentlichen Eingabemasken, Authentifizierung,
-Datei-Uploads und PDF-Generatoren folgen in den nächsten Ausbauschritten.
+Hinweis Foto-Speicherung:
+v0.5 speichert komprimierte Bilder zunächst direkt als Data-URL in der Datenbank, damit die Baustellenfunktion sofort arbeitet.
+Der private Neon-Dateispeicher `schadenmanagement-files` ist bereits angelegt; die Umstellung auf diesen Speicher folgt in der nächsten Version.
