@@ -5,6 +5,7 @@ const labels={admin:"Admin",techniker:"Techniker",buero:"Büro"};
 
 export default function UserManager(){
  const[users,setUsers]=useState<U[]>([]),[companies,setCompanies]=useState<C[]>([]),[err,setErr]=useState(""),[msg,setMsg]=useState("");
+ const[displayName,setDisplayName]=useState(""),[username,setUsername]=useState(""),[email,setEmail]=useState("");
  async function load(){
   const [ru,rc]=await Promise.all([fetch("/api/users",{cache:"no-store"}),fetch("/api/companies",{cache:"no-store"})]);
   const ju=await ru.json(),jc=await rc.json();
@@ -16,7 +17,8 @@ export default function UserManager(){
   e.preventDefault();setErr("");setMsg("");const f=e.currentTarget,fd=new FormData(f);
   const body:any=Object.fromEntries(fd.entries());body.company_ids=fd.getAll("company_ids");
   const r=await fetch("/api/users",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}),j=await r.json();
-  if(!r.ok){setErr(j.error||"Fehler");return}f.reset();setMsg("Benutzer angelegt.");load()
+  if(!r.ok){setErr(j.error||"Fehler");return}
+  f.reset();setDisplayName("");setUsername("");setEmail("");setMsg("Benutzer angelegt.");load()
  }
  async function patch(id:string,b:any){const r=await fetch(`/api/users/${id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)});if(!r.ok){const j=await r.json();setErr(j.error||"Änderung fehlgeschlagen.");return}load()}
  function toggleCompany(u:U,companyId:string,checked:boolean){
@@ -25,14 +27,14 @@ export default function UserManager(){
    patch(u.id,{company_ids:next});
  }
  return <section className="grid cols2">
-  <form className="card" onSubmit={create}><h2>Benutzer anlegen</h2>{err&&<div className="error">{err}</div>}{msg&&<div className="notice">{msg}</div>}
+  <form className="card" onSubmit={create} autoComplete="off"><h2>Benutzer anlegen</h2>{err&&<div className="error">{err}</div>}{msg&&<div className="notice">{msg}</div>}
    <div className="formGrid">
-    <div className="field"><label>Anzeigename *</label><input name="display_name" required/></div>
-    <div className="field"><label>Benutzername *</label><input name="username" required/></div>
-    <div className="field"><label>E-Mail</label><input name="email" type="email"/></div>
+    <div className="field"><label>Anzeigename *</label><input name="display_name" value={displayName} onChange={e=>setDisplayName(e.target.value)} autoComplete="off" required/></div>
+    <div className="field"><label>Benutzername *</label><input name="username" value={username} onChange={e=>setUsername(e.target.value)} autoComplete="new-password" spellCheck={false} required/></div>
+    <div className="field"><label>E-Mail</label><input name="email" type="email" value={email} onChange={e=>setEmail(e.target.value)} autoComplete="off"/></div>
     <div className="field"><label>Rolle *</label><select name="role" defaultValue="techniker"><option value="techniker">Techniker</option><option value="buero">Büro</option><option value="admin">Admin</option></select></div>
     <div className="field full"><label>Firma / Firmen *</label><div className="companyChecks">{companies.map(c=><label className="checkRow" key={c.id}><input type="checkbox" name="company_ids" value={c.id}/><span>{c.name}</span></label>)}</div></div>
-    <div className="field full"><label>Startpasswort *</label><input type="password" name="password" minLength={8} required/></div>
+    <div className="field full"><label>Startpasswort *</label><input type="password" name="password" minLength={8} autoComplete="new-password" required/></div>
    </div><button className="button success">Benutzer speichern</button>
   </form>
   <div className="card"><h2>Benutzerrollen & Firmenzugriff</h2><p className="muted small">Benutzer sehen ausschließlich Schäden der Firmen, denen sie hier zugeordnet sind. Ein Benutzer kann Erhard, Dryland oder beide Firmen erhalten.</p>

@@ -1,43 +1,15 @@
-v0.9.7 – NUMMERNKREISE + DOKUMENTLAYOUT-KORREKTUR
+v0.9.7.1 – BENUTZERNAME / AUTOFILL-FIX
 
-Diese Version ist kumulativ auf Basis v0.9.6.
+Behoben:
+- Benutzername beim Anlegen eines neuen Benutzers ist frei editierbar.
+- Das Formular startet mit leeren Feldern.
+- Browser-/Passwortmanager-Autofill wird für Benutzername, Anzeigename und E-Mail unterdrückt.
+- Startpasswort ist als neues Passwort markiert.
+- Nach dem Speichern werden die Eingabefelder zuverlässig geleert.
 
-1. NUMMERNKREISE
-- Getrennte fortlaufende Nummern je Firma (Erhard / Dryland).
-- Getrennt für:
-  Projekt
-  Angebot
-  Rechnung
-  Auftragserteilung
-- Getrennt nach Jahr.
-- Im Bereich Firmendaten gibt es jetzt „Nummernkreise“.
-- Für jedes Jahr kann ein Startwert festgelegt werden.
-- Beispiel 2027: Startwert 1 -> 2027-001.
-- Auftragserteilung Standard: AE-2027-001.
-- Format, Präfix und Anzahl Stellen können bei Bedarf angepasst werden.
-- Aktueller Stand wird angezeigt.
-- Bereits verwendete Nummern werden nicht zurückgesetzt.
-- Bei neuen Projekten, Angeboten, Rechnungen und Auftragserteilungen wird die Nummer automatisch vergeben, wenn das Nummernfeld leer bleibt.
-- Bestehende Standardnummern wie 2026-045 werden beim erstmaligen Aufbau eines Nummernkreises berücksichtigt.
-- Die Datenbankmigration für number_sequences und assignment_number wurde bereits freigegeben und angewendet.
+Ursache:
+Im App-Code war kein fester Benutzername „Robert“ hinterlegt. Der Wert wurde sehr wahrscheinlich vom Browser bzw. Passwortmanager aus gespeicherten Zugangsdaten in das Formular eingesetzt. Das neue kontrollierte Eingabefeld verhindert, dass dieser Wert im Formular festhängt.
 
-2. ANGEBOT / RECHNUNG – LAYOUTKORREKTUR
-- Seitenaufteilung neu berechnet: Der bisher viel zu niedrige feste Grenzwert der ersten Seite wurde entfernt.
-- Gruppen wie Geräteeinsatz, Rapportarbeiten und Fahrzeugkosten werden deutlich besser auf den noch vorhandenen Platz verteilt.
-- Eine Gruppe wird nur auf die nächste Seite geschoben, wenn sie tatsächlich nicht mehr sinnvoll passt.
-- Leistungszeitraum und Datum wurden als saubere zweispaltige Metadatenzeilen formatiert.
-- Leistungsort wird mehrzeilig und sauber dargestellt.
-- Das aus der Beispielrechnung übernommene „zu LWS / VM-Nr.“ wird NICHT mehr pauschal angezeigt.
-- Die Projektnummer wird jetzt korrekt als „Projekt-Nr.“ angezeigt.
-- Eine echte Referenz wird nur angezeigt, wenn im Projekt tatsächlich reference_number gepflegt ist.
-- Eine Schadennummer wird nur angezeigt, wenn sie tatsächlich vorhanden ist.
-- Das Dokumentlayout bleibt grundsätzlich an der hochgeladenen Erhard-Rechnung orientiert.
-
-3. WICHTIG
-- Wenn für 2027 andere Startwerte gewünscht sind: Firmendaten -> Nummernkreise -> Jahr 2027 hinzufügen -> Werte einstellen -> speichern.
-- Das Nummernfeld beim neuen Angebot / der neuen Rechnung einfach leer lassen, damit die automatische Vergabe greift.
-- Bestehende Dokumentnummern werden nicht geändert.
-
-UPLOAD
-ZIP entpacken und den Inhalt mit gleicher Ordnerstruktur in GitHub hochladen/ersetzen.
+UPLOAD:
+ZIP entpacken und komplett mit gleicher Ordnerstruktur in GitHub hochladen/ersetzen.
 Danach Commit und Vercel-Build abwarten.
