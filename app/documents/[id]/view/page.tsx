@@ -21,7 +21,7 @@ export default async function DocumentView({params}:{params:Promise<{id:string}>
    SELECT d.*,
           co.code AS company_code,co.name AS company_name,co.legal_name,
           co.street AS company_street,co.postal_code AS company_postal_code,co.city AS company_city,
-          co.phone,co.mobile,co.email,co.tax_number,co.vat_id,co.iban,co.bic,co.bank,
+          co.phone,co.mobile,co.email,co.tax_number,co.vat_id,co.iban,co.bic,co.bank_name AS bank,
           c.title case_title,c.object_street,c.object_postal_code,c.object_city,
           cu.first_name customer_first_name,cu.last_name customer_last_name,cu.company_name customer_company_name,
           cu.street customer_street,cu.postal_code customer_postal_code,cu.city customer_city

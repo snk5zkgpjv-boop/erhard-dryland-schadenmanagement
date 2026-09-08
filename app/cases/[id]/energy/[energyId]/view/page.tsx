@@ -10,14 +10,24 @@ function money(v:any){return Number(v||0).toLocaleString("de-DE",{minimumFractio
 export default async function EnergyView({params}:{params:Promise<{id:string,energyId:string}>}){
  await requirePageUser(["admin","techniker","buero"]);
  const{id,energyId}=await params,sql=getSql();
- const rows=await sql`SELECT e.*,c.case_number,c.title,c.object_street,c.object_postal_code,c.object_city,c.insurer,c.insurance_number,c.claim_number,
-  co.code company_code,co.name company_name,co.street company_street,co.postal_code company_postal_code,co.city company_city,co.email,co.phone,co.mobile,
-  cu.first_name,cu.last_name,cu.company_name customer_company_name
-  FROM energy_records e JOIN cases c ON c.id=e.case_id JOIN companies co ON co.id=c.company_id LEFT JOIN customers cu ON cu.id=c.customer_id
+ const rows=await sql`
+  SELECT
+   e.id,e.unit_name,e.meter_name,
+   e.period_start AS start_date,e.period_end AS end_date,
+   e.start_reading_kwh AS meter_start,e.end_reading_kwh AS meter_end,
+   e.consumption_kwh,e.electricity_price_per_kwh AS price_per_kwh,e.calculated_cost,
+   c.case_number,c.title,c.object_street,c.object_postal_code,c.object_city,c.insurer,c.insurance_number,c.claim_number,
+   co.code company_code,co.name company_name,co.street company_street,co.postal_code company_postal_code,co.city company_city,co.email,co.phone,co.mobile,
+   cu.first_name,cu.last_name,cu.company_name customer_company_name
+  FROM energy_records e
+  JOIN cases c ON c.id=e.case_id
+  JOIN companies co ON co.id=e.company_id
+  LEFT JOIN customers cu ON cu.id=c.customer_id
   WHERE e.id=${energyId} AND e.case_id=${id} LIMIT 1`;
  if(!rows.length)return <main className="shell"><h1>Energieverbrauchsnachweis nicht gefunden.</h1></main>;
  const x:any=rows[0],customer=x.customer_company_name||[x.first_name,x.last_name].filter(Boolean).join(" ")||"–";
- const cost=x.consumption_kwh!=null&&x.price_per_kwh!=null?Number(x.consumption_kwh)*Number(x.price_per_kwh):null;
+ const cost=x.calculated_cost!=null?Number(x.calculated_cost):(x.consumption_kwh!=null&&x.price_per_kwh!=null?Number(x.consumption_kwh)*Number(x.price_per_kwh):null);
+
  return <main className={styles.screen}>
   <div className={`shell noPrint ${styles.toolbar}`}><Link className="back" href={`/cases/${id}/forms`}>← Formulare</Link><PrintButton/></div>
   <article className={styles.sheet}>
@@ -36,7 +46,6 @@ export default async function EnergyView({params}:{params:Promise<{id:string,ene
      <tr><th>Versicherungsnummer</th><td>{x.insurance_number||"–"}</td></tr>
     </tbody></table>
    </div>
-
    <h2 className={styles.subTitle}>Trocknungszeitraum und Verbrauch</h2>
    <table className={styles.infoTable}><tbody>
     <tr><th>Beginn</th><td>{date(x.start_date)}</td><th>Ende</th><td>{date(x.end_date)}</td></tr>

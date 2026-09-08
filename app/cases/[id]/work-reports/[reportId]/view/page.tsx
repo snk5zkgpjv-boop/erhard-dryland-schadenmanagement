@@ -53,7 +53,7 @@ export default async function WorkReportView({params}:{params:Promise<{id:string
 
    <div className={styles.signatureGrid}>
     <div>{x.customer_signature_url?<img src={x.customer_signature_url} alt="Unterschrift Auftraggeber" style={{maxWidth:"65mm",maxHeight:"22mm"}}/>:null}<div className={styles.sigLine}>Unterschrift Auftraggeber</div></div>
-    <div>{x.service_provider_signature_url?<img src={x.service_provider_signature_url} alt="Unterschrift Mitarbeiter" style={{maxWidth:"65mm",maxHeight:"22mm"}}/>:null}<div className={styles.sigLine}>Unterschrift Mitarbeiter / Techniker</div></div>
+    <div>{x.worker_signature_url?<img src={x.worker_signature_url} alt="Unterschrift Mitarbeiter" style={{maxWidth:"65mm",maxHeight:"22mm"}}/>:null}<div className={styles.sigLine}>Unterschrift Mitarbeiter / Techniker</div></div>
    </div>
    <footer className={styles.footer}><span>{x.company_name}</span><span>Rapport {x.report_number||""}</span></footer>
   </article>

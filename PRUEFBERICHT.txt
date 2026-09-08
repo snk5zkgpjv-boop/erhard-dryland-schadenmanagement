@@ -1,0 +1,45 @@
+v0.9.3.2 – BUTTON-/ROUTEN-PRÜFUNG
+
+Gefundene konkrete Fehler:
+1. Angebot/Rechnung öffnen:
+   Dokumentansicht fragte companies.bank ab.
+   Richtig ist companies.bank_name.
+   -> behoben.
+
+2. Formulare & Nachweise:
+   Seite fragte energy_records.start_date/end_date ab.
+   Die echten Datenbankfelder heißen period_start/period_end.
+   -> behoben.
+
+3. Energie-Reiter / Energie speichern:
+   Die API verwendete mehrere veraltete Feldnamen und setzte company_id beim INSERT nicht.
+   Echte Datenbankfelder:
+   period_start, period_end, start_reading_kwh, end_reading_kwh,
+   electricity_price_per_kwh, calculated_cost.
+   -> API vollständig angepasst; Oberfläche kann die bisherigen Feldnamen weiterverwenden.
+
+4. Energieverbrauchsnachweis öffnen:
+   Dieselben falschen Energiefeldnamen.
+   -> behoben.
+
+5. Rapport öffnen:
+   Unterschrift des Technikers wurde unter einem falschen Feldnamen gelesen.
+   Echte Spalte: worker_signature_url.
+   -> behoben.
+
+Geprüfte neue Navigation:
+- Angebot erstellen -> /documents/new?case_id=...&type=angebot
+- Angebot öffnen -> /documents/[id]/view
+- Auftragserteilung aus Angebot -> Workflow-API
+- Auftragserteilung öffnen -> /cases/[id]/assignment/view
+- Ausführung & Verbrauch -> /cases/[id]/drying-energy
+- Rechnung erstellen -> /documents/new?...type=rechnung...
+- Formulare & Nachweise -> /cases/[id]/forms
+- Rapport öffnen -> /cases/[id]/work-reports/[reportId]/view
+- Energieverbrauchsnachweis öffnen -> /cases/[id]/energy/[energyId]/view
+
+Für diese Korrektur ist KEINE neue Datenbankmigration nötig.
+
+UPLOAD:
+ZIP entpacken und alle enthaltenen Programmdateien mit gleicher Ordnerstruktur in GitHub ersetzen.
+Danach Commit und Vercel-Build abwarten.

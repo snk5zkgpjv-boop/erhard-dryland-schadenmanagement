@@ -16,7 +16,7 @@ export default async function CaseForms({params}:{params:Promise<{id:string}>}){
  const [a,reports,energy]=await Promise.all([
   sql`SELECT id,assignment_date FROM assignments WHERE case_id=${id} ORDER BY created_at DESC LIMIT 1`,
   sql`SELECT id,report_date,report_number,worker_name,description FROM work_reports WHERE case_id=${id} ORDER BY report_date DESC,created_at DESC`,
-  sql`SELECT id,unit_name,start_date,end_date,consumption_kwh FROM energy_records WHERE case_id=${id} ORDER BY created_at DESC`
+  sql`SELECT id,unit_name,period_start AS start_date,period_end AS end_date,consumption_kwh FROM energy_records WHERE case_id=${id} ORDER BY created_at DESC`
  ]);
  const x:any=c[0];
  return <main className="shell">
