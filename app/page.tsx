@@ -1,2 +1,3 @@
 import Dashboard from "@/components/Dashboard";
-export default function Home(){return <main className="shell"><Dashboard/></main>}
+import {requirePageUser} from "@/lib/auth";
+export default async function Home(){await requirePageUser();return <main className="shell"><Dashboard/></main>}

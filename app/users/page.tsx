@@ -1,0 +1,2 @@
+import Link from "next/link";import UserManager from "@/components/UserManager";import {requirePageUser} from "@/lib/auth";
+export default async function Users(){await requirePageUser(["admin"]);return <main className="shell"><div className="topbar"><Link className="back" href="/">← Übersicht</Link></div><section className="hero"><span className="pill">Administration</span><h1>Benutzer & Rollen</h1></section><UserManager/></main>}

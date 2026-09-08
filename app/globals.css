@@ -54,3 +54,15 @@
 }
 
 .dangerButton{background:#b42318;color:#fff}.aiBadge{display:inline-block;font-size:11px;font-weight:800;padding:4px 7px;border-radius:999px;background:#efe9ff;color:#53389e}
+
+.dangerZone{display:flex;align-items:center;justify-content:space-between;gap:18px;border:2px solid #f0b4ae;background:#fff7f6;border-radius:14px;padding:18px}
+.dangerZone h3{margin:0 0 5px;color:#8f1d14}
+.dangerZone p{margin:0;color:#6b3a35;max-width:760px}
+@media(max-width:700px){.dangerZone{align-items:stretch;flex-direction:column}.dangerZone .button{width:100%}}
+
+.authShell{max-width:520px;margin:60px auto;padding:16px}
+.authCard{display:grid;gap:14px}
+.userRow{display:grid;grid-template-columns:1fr 150px auto;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding:12px 0}
+.userRow select{margin:0}.toggleLabel{display:flex;align-items:center;gap:6px;white-space:nowrap}.toggleLabel input{width:auto}
+input[type=file]{background:#fff}
+@media(max-width:700px){.userRow{grid-template-columns:1fr}.userRow select{width:100%}}

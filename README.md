@@ -1,29 +1,20 @@
-# Erhard & Dryland Schadenmanagement – v0.8
+# Erhard & Dryland Schadenmanagement – v0.8.2
 
-Neu:
-- Schadensfall endgültig löschen (mit Sicherheitsabfrage, abhängige Daten werden per Datenbank-Cascade entfernt)
-- direkter Auftrag ohne Schadensbericht: Kunde -> Angebot/Rechnung
-- zentrale Artikelliste aus `Artikelliste Gesamt.xlsx`
-  - 170 eigene Erhard/Dryland-Positionen
-  - 537 AXA-Positionen
-- Artikelsuche in Angeboten/Rechnungen
-- Schaden -> Artikelvorschläge aus Trocknung und Rapporten
-- freie Leistungsbeschreibung -> KI erzeugt geeignete Suchbegriffe für die Artikelliste
-- Angebote und Rechnungen bleiben als Entwurf/versendet/etc. bearbeitbar
-- jede Dokumentposition kann nachträglich geändert oder gelöscht werden; Katalog-Stammdaten bleiben unverändert
-- freie Positionen sind möglich
-- Auftragserteilung kann gespeichert und später bearbeitet werden
-- KI-Bildbeschreibung bei Schadensfotos
-- KI-Geräteerkennung aus Gerätefoto/Typenschild
-- KI füllt Gerätebezeichnung, Seriennummer, Leistung und Kategorie als Vorschlag aus
-- KI-Aufrufe laufen serverseitig; `OPENAI_API_KEY` liegt nur in Vercel
+## Neu
+- Bilder können auf Handy/Tablet weiterhin aufgenommen oder aus der Fotomediathek gewählt werden.
+- Auf Laptop/PC kann eine vorhandene Bilddatei ausgewählt werden.
+- Das gilt für Schadens-/Mess-/Objektbilder sowie Geräte-/Typenschildfotos.
+- Benutzeranmeldung mit datenbankgestützten Sessions.
+- Rollen:
+  - Admin: Vollzugriff, KI, Geräteverwaltung, Benutzerverwaltung, Schadensfälle löschen.
+  - Techniker: Schadenaufnahme, Fotos, Messungen, Trocknung, Rapporte.
+  - Büro: Artikelliste, Angebote und Rechnungen.
+- KI-Endpunkt ist serverseitig auf Admin-Benutzer beschränkt.
+- Schadensfall löschen ist serverseitig auf Admin-Benutzer beschränkt.
+- Beim ersten Aufruf wird die Benutzerverwaltung automatisch in Neon angelegt; es ist keine manuelle SQL-Migration nötig.
 
-OpenAI:
-In Vercel unter Settings -> Environment Variables einmalig anlegen:
-- `OPENAI_API_KEY`
-- optional `OPENAI_MODEL=gpt-5.6-luna`
-
-Der Schlüssel gehört NICHT in GitHub.
-
-Hinweis:
-Die App hat derzeit noch kein vollständiges Benutzer-/Rollen-Login. Die KI-Routen sind technisch serverseitig geschützt, der eigentliche Admin-Rollencheck kommt mit dem Auth-Ausbau. Solange nur der Admin die App nutzt, ist die Funktion verwendbar.
+## Ersteinrichtung nach Upload
+1. Vercel Deployment abwarten.
+2. `/setup` öffnen.
+3. Ersten Admin-Benutzer mit Benutzername und Passwort anlegen.
+4. Danach unter `Benutzer` weitere Konten erstellen.

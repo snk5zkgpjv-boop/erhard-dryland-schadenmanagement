@@ -1,11 +1,11 @@
-import {getSql} from "@/lib/db";import PrintButton from "@/components/PrintButton";
+import {requirePageUser} from "@/lib/auth";import {getSql} from "@/lib/db";import PrintButton from "@/components/PrintButton";
 
 const MEASUREMENT_TEXT=`Das kapazitive (auch dielektrische) Messverfahren, z. B. mit Hilfe der TROTEC Sensoren T660 bzw. TS660SDI, ist eine indikative, zerstörungsfreie Feuchtigkeitsuntersuchung zur Feststellung von oberflächlichen Durchfeuchtungen bzw. Feuchteverteilungen in Baustoffen, wie z. B. Mauerwerk, Beton, Estrich, Holz, Isolierstoffe usw. Die Messung beruht auf dem Prinzip der Änderung der elektrischen Kapazität eines Materials in Abhängigkeit vom Feuchtegehalt. Das zur Kapazitätsbestimmung notwendige Messfeld bildet sich zwischen der Messkugel und der zu beurteilenden Untergrundmasse aus. Die Veränderung des elektrischen Feldes durch Material und Feuchte wird erfasst und auf der Anzeige des Messgeräts als digitaler Wert – sog. Digits – angezeigt.`;
 
 function Header({erhard}:{erhard:boolean}){return <div className="reportHead"><img src={erhard?"/erhard-logo.png":"/dryland-logo.png"} alt="Logo"/><div className="reportContact">{erhard?<><strong>Erhard Dienstleistungen</strong><br/>Böhmerwaldstr. 15<br/>73527 Hussenhofen<br/>Tel.: 07171 / 874 18 70<br/>Mobil: 0151 / 194 970 10</>:<><strong>Dryland Trocknungstechnik</strong><br/>Gutenbergstr. 76-80<br/>D-73525 Schwäbisch Gmünd<br/>info@dryland-trocknungstechnik.de</>}</div></div>}
 function Footer({page,total=4}:{page:number,total?:number}){return <div className="reportFoot">Seite {page}/{total}</div>}
 
-export default async function ReportPage({params}:{params:Promise<{id:string}>}){
+export default async function ReportPage({params}:{params:Promise<{id:string}>}){\n await requirePageUser();
  const{id}=await params;const sql=getSql();
  const cases=await sql`SELECT c.*,co.code company_code,co.name company_name,co.street company_street,co.postal_code company_postal_code,co.city company_city,cu.first_name,cu.last_name,cu.company_name customer_company_name,cu.street customer_street,cu.postal_code customer_postal_code,cu.city customer_city FROM cases c JOIN companies co ON co.id=c.company_id LEFT JOIN customers cu ON cu.id=c.customer_id WHERE c.id=${id}`;
  if(!cases.length)return <main className="shell"><h1>Schaden nicht gefunden</h1></main>;

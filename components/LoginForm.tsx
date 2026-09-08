@@ -1,0 +1,7 @@
+"use client";import {FormEvent,useEffect,useState} from "react";import {useRouter,useSearchParams} from "next/navigation";import Link from "next/link";
+export default function LoginForm(){const[err,setErr]=useState(""),[setup,setSetup]=useState(false),[busy,setBusy]=useState(false),router=useRouter(),sp=useSearchParams();
+ useEffect(()=>{fetch("/api/auth/status",{cache:"no-store"}).then(r=>r.json()).then(j=>setSetup(Boolean(j.setup_required))).catch(()=>{})},[]);
+ async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();setBusy(true);setErr("");const r=await fetch("/api/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(Object.fromEntries(new FormData(e.currentTarget).entries()))});const j=await r.json();if(!r.ok){setErr(j.error||"Anmeldung fehlgeschlagen.");setBusy(false);return}router.replace(sp.get("next")||"/");router.refresh()}
+ return <form className="card authCard" onSubmit={submit}><h1>Anmelden</h1><p className="muted">Erhard & Dryland Schadenmanagement</p>{err&&<div className="error">{err}</div>}
+ <div className="field"><label>Benutzername</label><input name="username" autoComplete="username" required/></div><div className="field"><label>Passwort</label><input type="password" name="password" autoComplete="current-password" required/></div>
+ <button className="button" disabled={busy}>{busy?"Anmeldung …":"Anmelden"}</button>{setup&&<p className="small" style={{marginTop:14}}>Noch kein Benutzer vorhanden. <Link href="/setup">Ersten Admin einrichten</Link></p>}</form>}

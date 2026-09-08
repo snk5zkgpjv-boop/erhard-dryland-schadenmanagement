@@ -10,6 +10,7 @@ function parseJson(text:string){
   return JSON.parse(cleaned);
 }
 export async function POST(r:Request){
+  if(r.headers.get("x-app-role")!=="admin") return Response.json({error:"Die KI-Funktion ist nur für Admin-Benutzer freigeschaltet."},{status:403});
   const apiKey=process.env.OPENAI_API_KEY;
   if(!apiKey) return Response.json({error:"OPENAI_API_KEY ist in Vercel noch nicht hinterlegt."},{status:503});
   try{

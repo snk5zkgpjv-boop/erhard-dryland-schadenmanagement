@@ -1,23 +1,21 @@
-UPDATE v0.8
+UPDATE v0.8.2 – BILDAUSWAHL + BENUTZERROLLEN
 
 1. ZIP entpacken.
-2. GitHub-Repository öffnen.
+2. GitHub Repository öffnen.
 3. Add file -> Upload files.
-4. Den kompletten entpackten Inhalt in das Upload-Fenster ziehen.
+4. Den KOMPLETTEN entpackten Inhalt hochladen.
 5. Commit changes.
 6. Vercel baut automatisch neu.
 
-Danach in Vercel einmalig:
-Settings -> Environment Variables -> Add
-Name: OPENAI_API_KEY
-Value: deinen OpenAI-API-Key
-Environments: Production, Preview, Development
-Speichern und anschließend Redeploy, falls Vercel nicht automatisch neu deployt.
+Danach:
+1. Öffne deine App mit /setup am Ende der Adresse.
+2. Lege den ersten Admin-Benutzer an.
+3. Danach kannst du dich anmelden.
+4. Auf der Startseite erscheint für Admins der Bereich "Benutzer".
+5. Dort kannst du Techniker-, Büro- und weitere Admin-Benutzer anlegen.
 
-Optional:
-OPENAI_MODEL = gpt-5.6-luna
-
-DATABASE_URL nicht ändern.
-
-Die zentrale Artikelliste ist bereits aus der hochgeladenen Excel-Datei in die App übernommen.
-Es ist keine SQL-Migration nötig.
+Wichtig:
+- OPENAI_API_KEY bleibt unverändert in Vercel.
+- DATABASE_URL bleibt unverändert.
+- Keine neue Environment Variable nötig.
+- Die Tabellen für Benutzer und Sitzungen legt die App beim ersten Setup automatisch in Neon an.

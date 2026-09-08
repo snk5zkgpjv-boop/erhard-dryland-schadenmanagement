@@ -1,0 +1,2 @@
+import {ensureAuthSchema,currentUser} from "@/lib/auth";import {getSql} from "@/lib/db";
+export async function GET(){try{await ensureAuthSchema();const sql=getSql();const c=await sql`SELECT count(*)::int count FROM app_users`;const user=await currentUser();return Response.json({setup_required:Number(c[0].count)===0,user})}catch(e){return Response.json({error:e instanceof Error?e.message:"Status konnte nicht geladen werden."},{status:500})}}
