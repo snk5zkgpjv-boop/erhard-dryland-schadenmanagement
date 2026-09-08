@@ -71,3 +71,13 @@ textarea{min-height:78px}
 }
 
 .companyPreview{display:grid;grid-template-columns:1fr 1fr;gap:18px;border-top:1px solid var(--line);padding-top:12px;font-size:12px;line-height:1.45}.companyPreview>div:last-child{text-align:right}@media(max-width:600px){.companyPreview{grid-template-columns:1fr}.companyPreview>div:last-child{text-align:left}}
+
+.aiPhotoCard{margin-top:14px;border:1px solid #d9e2ea;background:#fbfcfd}
+.aiPhotoHead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.aiPhotoHead h2{margin:6px 0 0}
+.aiDraft{margin-top:14px;border-top:1px solid #d9e2ea;padding-top:12px}
+.aiInfoGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.aiInfoGrid>div{border:1px solid #e0e5e9;border-radius:8px;padding:9px;background:white}
+.aiDraftItem{border:1px solid #e1e5e8;border-radius:8px;padding:9px;margin:7px 0;background:#fff}
+.aiDraftTop{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;margin-bottom:4px}
+@media(max-width:720px){.aiInfoGrid{grid-template-columns:1fr}}

@@ -1,29 +1,32 @@
-v0.9.5 – AUFTRAGSERTEILUNG IM ORIGINALDESIGN
+v0.9.6 – FOTO → ANGEBOTSENTWURF
 
-Die Auftragserteilung wurde anhand der hochgeladenen Vorlage Auftragserteilung_Erhard.pdf neu umgesetzt.
+CUMULATIVE VERSION auf Basis v0.9.5.
 
-Enthalten:
-- Logo links oben wie Vorlage
-- Firmenanschrift/Telefon/Steuernummer rechts oben
-- Überschrift Auftragserteilung
-- großer gerahmter Auftragserteilungsblock
-- Name / Vorname / Straße / PLZ-Ort als Linienfelder
-- Daten werden automatisch aus der Schadenakte/Kundendaten übernommen
-- beauftragte Maßnahmen werden automatisch aus der Auftragserteilung bzw. dem Angebot übernommen
-- Unterschriftsbereich Auftraggeber
-- Überschrift Abtretungserklärung
-- gerahmter Abtretungsblock
-- gestrichelter Versicherungsdatenbereich
-- Versicherung, Schaden-Nr. und Vers.-Schein-Nr. werden automatisch übernommen
-- Wortlaut der hochgeladenen Abtretungserklärung wird verwendet
-- Unterschrift Abtretender/Versicherungsnehmer
-- Annahme der Abtretung durch Dienstleister mit Unterschriftsfeld
-- A4-Druck-/PDF-Layout
-- Firmendaten werden aus dem neuen Firmendaten-Bereich übernommen
+Neu:
+- Im Angebotseditor erscheint der Bereich „KI-Fotoassistent – Foto → Angebotsentwurf“.
+- Bis zu 6 Fotos von handschriftlichen Zetteln, Aufmaßen oder Baustellennotizen können ausgewählt werden.
+- Optional kann ein kurzer Zusatzhinweis mitgegeben werden.
+- Die KI erkennt:
+  * Kunde (wenn auf den Fotos vorhanden)
+  * Leistungsort (wenn vorhanden)
+  * Tätigkeiten / Leistungspositionen
+  * Maße, Wiederholungen und daraus eindeutige Mengen
+  * Zusatzaufwand wie größere Putzstärken
+  * Unsicherheiten / schlecht lesbare Stellen
+  * Suchbegriffe für den vorhandenen Artikelkatalog
+- Der Entwurf wird zuerst zur Prüfung angezeigt.
+- Erst nach Klick auf „Entwurf in Angebot übernehmen“ werden Positionen in den Angebotseditor übernommen.
+- Preise werden NICHT von der KI erfunden. Neue KI-Positionen starten mit 0,00 € und werden anschließend aus dem Artikelkatalog bzw. manuell bepreist.
+- Erkannter Leistungsort kann direkt in die Liefer-/Leistungsadresse übernommen werden.
+- Das fertige Angebot nutzt weiterhin das bereits eingebaute Erhard-/Dryland-Dokumentlayout, also dasselbe Layoutsystem wie Rechnung/Angebot.
+- OPENAI_API_KEY wird nur serverseitig verwendet.
+- Optional kann über OPENAI_VISION_MODEL ein anderes Bildmodell gesetzt werden; Standard ist gpt-5.6-luna.
 
-Hinweis:
-Für Versicherungs-Straße und Versicherungs-PLZ/Ort gibt es aktuell noch keine eigenen Datenbankfelder. Diese beiden Linien bleiben deshalb leer. Die bereits vorhandenen Versicherungsdaten werden automatisch eingesetzt.
+Wichtig:
+- Keine Datenbankmigration erforderlich.
+- Bestehende Angebote/Rechnungen werden nicht verändert.
+- Der neue Assistent ist eine Vorstufe: erst erkennen → prüfen → übernehmen → Preise kontrollieren → speichern.
 
 UPLOAD:
-ZIP entpacken und komplett mit gleicher Ordnerstruktur in GitHub hochladen/ersetzen.
+ZIP entpacken und den Inhalt mit gleicher Ordnerstruktur in GitHub hochladen/ersetzen.
 Danach Commit und Vercel-Build abwarten.
