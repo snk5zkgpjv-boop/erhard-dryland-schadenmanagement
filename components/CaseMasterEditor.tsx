@@ -2,7 +2,7 @@
 import {FormEvent,useState} from "react";
 import {SelectOrCustom,STANDARD_FLOORS} from "@/components/RoomFields";
 
-export default function CaseMasterEditor({data,onSaved}:{data:any;onSaved:()=>Promise<void>|void}){
+export default function CaseMasterEditor({data,onSaved}:{data:any;onSaved?:()=>Promise<void>|void}){
  const[saving,setSaving]=useState(false),[msg,setMsg]=useState(""),[err,setErr]=useState("");
  async function save(e:FormEvent<HTMLFormElement>){
   e.preventDefault();setSaving(true);setMsg("");setErr("");
@@ -10,7 +10,8 @@ export default function CaseMasterEditor({data,onSaved}:{data:any;onSaved:()=>Pr
    const body=Object.fromEntries(new FormData(e.currentTarget).entries());
    const r=await fetch(`/api/cases/${data.id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
    const j=await r.json();if(!r.ok)throw new Error(j.error||"Speichern fehlgeschlagen.");
-   setMsg("Schadens- und Auftraggeberdaten gespeichert.");await onSaved()
+   setMsg("Schadens- und Auftraggeberdaten gespeichert.");
+   if(onSaved) await onSaved();
   }catch(e){setErr(e instanceof Error?e.message:"Speichern fehlgeschlagen.")}finally{setSaving(false)}
  }
  return <form className="card" onSubmit={save}>
