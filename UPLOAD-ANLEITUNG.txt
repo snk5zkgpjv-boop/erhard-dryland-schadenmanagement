@@ -1,61 +1,29 @@
-v0.9.4 – ORIGINAL-LAYOUT + FIRMENDATEN
+v0.9.5 – AUFTRAGSERTEILUNG IM ORIGINALDESIGN
 
-Diese ZIP ist kumulativ und enthält auch die bisherigen Workflow-/Button-Hotfixes.
+Die Auftragserteilung wurde anhand der hochgeladenen Vorlage Auftragserteilung_Erhard.pdf neu umgesetzt.
 
-DOKUMENTLAYOUT
-Das Angebots-/Rechnungslayout wurde anhand der hochgeladenen Rechnung 2026-1045 neu aufgebaut:
-- Logo oben rechts
-- horizontale Trennlinie unter dem Logo
-- Absenderzeile oberhalb der Empfängeradresse
-- Empfängeradresse links
-- großer Weißraum wie in der Vorlage
-- Rechnung/Angebot links
-- Datum, Leistungszeitraum, Bearbeiter und ggf. Leistungsadresse rechts
-- Positionstabelle mit:
-  Pos | Beschreibung | Einzelpreis € | Menge | Summe €
-- Gruppenüberschriften wie "Trocknung/Geräteeinsatz"
-- Nummerierung 1.1, 2.1 usw.
-- Zwischensummen je Gruppe
-- Übertrag bei Folgeseiten
-- Netto / MwSt / Gesamtbetrag
-- Zahlungstext
-- Fußzeile links mit Kontoinhaber, IBAN, BIC, Steuernummer
-- Fußzeile rechts mit Firma, Anschrift, Telefon und Mobil
-- Seitenzahl mittig
+Enthalten:
+- Logo links oben wie Vorlage
+- Firmenanschrift/Telefon/Steuernummer rechts oben
+- Überschrift Auftragserteilung
+- großer gerahmter Auftragserteilungsblock
+- Name / Vorname / Straße / PLZ-Ort als Linienfelder
+- Daten werden automatisch aus der Schadenakte/Kundendaten übernommen
+- beauftragte Maßnahmen werden automatisch aus der Auftragserteilung bzw. dem Angebot übernommen
+- Unterschriftsbereich Auftraggeber
+- Überschrift Abtretungserklärung
+- gerahmter Abtretungsblock
+- gestrichelter Versicherungsdatenbereich
+- Versicherung, Schaden-Nr. und Vers.-Schein-Nr. werden automatisch übernommen
+- Wortlaut der hochgeladenen Abtretungserklärung wird verwendet
+- Unterschrift Abtretender/Versicherungsnehmer
+- Annahme der Abtretung durch Dienstleister mit Unterschriftsfeld
+- A4-Druck-/PDF-Layout
+- Firmendaten werden aus dem neuen Firmendaten-Bereich übernommen
 
-WICHTIG:
-Im Dokumenteditor gibt es bei jeder Position jetzt "Gruppe / Überschrift".
-Damit kannst du exakt steuern, unter welcher Überschrift die Position in Rechnung/Angebot erscheint.
-
-FIRMENDATEN
-Neuer Admin-Bereich:
-Startseite -> Firmendaten
-
-Pro Firma editierbar:
-- Firmenname / rechtlicher Name
-- Anschrift
-- Telefon
-- Mobil
-- E-Mail
-- Webseite
-- Standard-Bearbeiter
-- Kontoinhaber
-- Bank
-- IBAN
-- BIC
-- Steuernummer
-- USt-ID
-- Logo-Pfad / Logo-URL
-
-Die Werte werden automatisch in neue und bereits gespeicherte Dokumentansichten übernommen,
-da Kopf-/Fußzeile beim Öffnen aus den aktuellen Firmendaten gelesen wird.
-
-KEINE NEUE DATENBANKMIGRATION NÖTIG.
-Die benötigten Firmenfelder und JSON-Konfigurationen existieren bereits.
+Hinweis:
+Für Versicherungs-Straße und Versicherungs-PLZ/Ort gibt es aktuell noch keine eigenen Datenbankfelder. Diese beiden Linien bleiben deshalb leer. Die bereits vorhandenen Versicherungsdaten werden automatisch eingesetzt.
 
 UPLOAD:
-1. ZIP entpacken.
-2. Kompletten Inhalt mit gleicher Ordnerstruktur in GitHub hochladen.
-3. Vorhandene Dateien ersetzen.
-4. Commit changes.
-5. Vercel-Build abwarten.
+ZIP entpacken und komplett mit gleicher Ordnerstruktur in GitHub hochladen/ersetzen.
+Danach Commit und Vercel-Build abwarten.
