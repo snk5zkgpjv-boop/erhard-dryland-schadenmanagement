@@ -1,0 +1,58 @@
+:root{
+  --bg:#f5f7fa;
+  --card:#ffffff;
+  --text:#17212b;
+  --muted:#6b7280;
+  --line:#dfe4ea;
+  --blue:#1976d2;
+  --dry:#1f9acb;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+main{max-width:1180px;margin:0 auto;padding:24px}
+.hero{
+  background:linear-gradient(135deg,#fff,#eef5fb);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:28px;
+  margin-bottom:22px;
+}
+h1{margin:0 0 8px;font-size:clamp(28px,4vw,44px)}
+.subtitle{color:var(--muted);margin:0;line-height:1.5}
+.companyGrid,.moduleGrid{display:grid;gap:16px}
+.companyGrid{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin:22px 0}
+.moduleGrid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:18px;
+  box-shadow:0 4px 18px rgba(0,0,0,.035);
+}
+.companyButton{
+  width:100%;
+  border:0;
+  background:transparent;
+  text-align:left;
+  cursor:pointer;
+  padding:0;
+}
+.badge{
+  display:inline-block;
+  font-size:12px;
+  font-weight:700;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#eaf3fb;
+  color:#0b63a8;
+  margin-bottom:10px;
+}
+.companyTitle{font-size:22px;font-weight:700;margin-bottom:6px}
+.moduleTitle{font-size:17px;font-weight:700;margin-bottom:6px}
+.small{font-size:14px;color:var(--muted);line-height:1.45}
+.footerNote{margin-top:24px;color:var(--muted);font-size:13px}
