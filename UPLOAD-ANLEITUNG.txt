@@ -1,21 +1,19 @@
-UPDATE v0.8.6 – MESSUNGEN & TROCKNUNGEN BEARBEITEN/LÖSCHEN + MESSFOTOS
+UPDATE v0.8.6.1 – GERÄTEBESTAND
+
+Die Datenbankänderung stock_quantity wurde bereits produktiv durchgeführt.
 
 Neu:
-- Messungen können nachträglich bearbeitet werden.
-- Messungen können gelöscht werden.
-- Bei neuen Messungen kann direkt ein Messfoto hochgeladen werden.
-- Bei bestehenden Messungen kann ein Messfoto ergänzt/ersetzt werden.
-- Verknüpfte Messfotos werden im Messverlauf als Vorschau angezeigt.
-- Der Schadensbericht bevorzugt das direkt mit der Messung verknüpfte Messfoto.
-- Bereits angelegte Trocknungen/Geräte können bearbeitet werden.
-- Bereits angelegte Trocknungen/Geräte können gelöscht werden.
-- Raum, Gerät, Verfahren, Aufstellzeit, Abbauzeit und Hinweise lassen sich ändern.
+- Gerätekatalog ist gemeinsam für Erhard und Dryland.
+- Beim Anlegen eines neuen Gerätemodells kann direkt der Bestand angegeben werden.
+- Rechts unter "Vorhandene Geräte" gibt es bei jedem Modell − / Anzahl / +.
+- Änderungen werden sofort in der Datenbank gespeichert.
+- Die bisherige Firmenauswahl beim Geräteanlegen entfällt.
 
 Upload:
 1. ZIP entpacken.
-2. Die vier Programmdateien mit gleicher Ordnerstruktur in GitHub hochladen und ersetzen.
-3. Commit changes.
-4. Vercel-Build abwarten.
+2. app/api/equipment/route.ts ersetzen.
+3. components/EquipmentManager.tsx ersetzen.
+4. Commit changes.
+5. Vercel-Build abwarten.
 
 STYLE-ERGÄNZUNG.txt ist optional und muss nicht hochgeladen werden.
-Für die Bestandsanzahl der Gerätemodelle (z. B. TTK 125 = 10 Stück) ist weiterhin die separat vorbereitete Datenbankerweiterung erforderlich.

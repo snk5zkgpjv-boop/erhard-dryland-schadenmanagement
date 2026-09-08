@@ -1,7 +1,3 @@
-Optional für schönere Darstellung ans Ende von app/globals.css anhängen:
-
-.editPanel{border:1px solid var(--line);background:#f8fafc;border-radius:12px;padding:12px;margin-bottom:14px}
-.editableRow{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid var(--line);padding:12px 0}
-.smallButton{padding:7px 10px;font-size:12px}
-.miniPhoto{width:72px;height:56px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
-@media(max-width:700px){.editableRow{flex-direction:column}}
+Optional ans Ende von app/globals.css anhängen:
+.equipmentStockRow{display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid var(--line);padding:12px 0}
+@media(max-width:600px){.equipmentStockRow{align-items:flex-start}.equipmentStockRow .qtyControl{margin-left:auto}}
