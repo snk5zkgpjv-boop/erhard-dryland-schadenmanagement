@@ -1,36 +1,39 @@
-UPDATE v0.9.1 – ORIGINALGETREUES DOKUMENTLAYOUT + LEISTUNGSZEITRAUM + LIEFERADRESSE
+UPDATE v0.9.2 – AUFTRAGSERTEILUNG + RAPPORTE + ENERGIEVERBRAUCHSNACHWEIS
 
-Die Datenbankfelder wurden bereits produktiv angelegt:
-- service_period_from
-- service_period_to
-- delivery_name
-- delivery_street
-- delivery_postal_code
-- delivery_city
+Keine weitere Datenbankänderung erforderlich.
 
 Neu:
-- Leistungszeitraum von/bis im Dokumenteditor.
-- Separate Liefer-/Leistungsadresse.
-- Bei Schadensfällen wird die Projektadresse automatisch vorgeschlagen.
-- Rechnungsanschrift/Auftraggeber bleibt separat.
-- Angebots- und Rechnungsansicht wurde stark an die hochgeladenen Erhard-Vorlagen angepasst:
-  * Logo oben rechts in Originalgröße
-  * Trennlinie
-  * Absenderzeile über dem Adressfeld
-  * Empfänger links
-  * Liefer-/Leistungsadresse und Datum rechts
-  * Rechnung mit Datum + Leistungszeitraum rechts
-  * Tabellenlayout mit grauem Kopf und Rahmen wie Original
-  * Summenblock
-  * Rechnungs-Zahlungstext
-  * Fußzeile mit Bank-/Steuer-/Kontaktdaten
-  * A4-Drucklayout
+- Auftragserteilung übernimmt automatisch Daten aus der Schadenakte:
+  Auftraggeber, Schadenort/Projekt, Versicherung, Schadennummer,
+  Versicherungsnummer und empfohlene/beauftragte Maßnahmen.
+- Eigene druckfähige Auftragserteilungsansicht.
+- Zentrale Seite "Formulare & Nachweise" je Schaden.
+- Alle bereits vorhandenen Test-Rapporte können als A4-Rapport geöffnet,
+  gedruckt oder als PDF gespeichert werden.
+- Rapportansicht enthält Projekt, Adresse, Auftraggeber, Rapport-Nr.,
+  Mitarbeiter, Arbeitszeiten, Pause, Fahrzeug/Fahrten,
+  Leistungsbeschreibung, Folgearbeiten, Geräte, Material und Unterschriften.
+- Alle vorhandenen Energieeinträge können als Stromverbrauchsnachweis
+  geöffnet, gedruckt oder als PDF gespeichert werden.
+- Energieverbrauchsnachweis enthält Kunde/Schadenort, Projekt-/Schadennr.,
+  Versicherung, Wohneinheit/Bereich, Beginn/Ende, Zählerstände,
+  Verbrauch kWh, optional Strompreis und errechnete Kosten.
+- Layout verwendet Logo und Firmendaten der Firma, unter der der Schaden angelegt ist.
+
+WICHTIG ZUR AUFTRAGSERTEILUNG:
+Der genaue juristische Wortlaut der ursprünglich hochgeladenen
+Abtretungserklärung war in den aktuell verfügbaren Quelldaten nicht
+vollständig extrahiert. Deshalb wird in dieser Version kein erfundener
+langer Abtretungstext eingefügt. Struktur, Versicherungsfelder,
+Beauftragung und Unterschriftsbereich sind enthalten.
 
 UPLOAD:
 1. ZIP entpacken.
-2. Alle enthaltenen Programmdateien in GitHub mit gleicher Ordnerstruktur hochladen und ersetzen.
-3. Commit changes.
-4. Vercel-Build abwarten.
+2. Alle enthaltenen Dateien in GitHub mit gleicher Ordnerstruktur hochladen.
+3. Vorhandene AssignmentEditor.tsx ersetzen.
+4. Commit changes.
+5. Vercel-Build abwarten.
 
-Wichtig:
-Die neue page.module.css muss mit hochgeladen werden. Dadurch ist das Dokumentlayout unabhängig von app/globals.css und sollte nicht wieder auf die riesige Logo-Darstellung zurückfallen.
+Bedienung:
+Schaden -> Dokumente -> Auftragserteilung -> "Formulare / Nachweise".
+Dort sind Auftragserteilung, Rapporte und Energieverbrauchsnachweise gesammelt.
