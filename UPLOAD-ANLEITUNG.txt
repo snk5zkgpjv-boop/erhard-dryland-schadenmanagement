@@ -1,39 +1,55 @@
-UPDATE v0.9.2 – AUFTRAGSERTEILUNG + RAPPORTE + ENERGIEVERBRAUCHSNACHWEIS
+v0.9.3 – SAMMELUPDATE: WORKFLOW + KOMPAKTERE UI + TROCKNUNGSVERBRAUCH
 
-Keine weitere Datenbankänderung erforderlich.
+Diese ZIP ist kumulativ und enthält auch die zuletzt erstellten Änderungen für:
+- neues Angebots-/Rechnungslayout
+- Leistungszeitraum + Liefer-/Leistungsadresse
+- Auftragserteilung, Rapporte und Energieverbrauchsnachweis
 
-Neu:
-- Auftragserteilung übernimmt automatisch Daten aus der Schadenakte:
-  Auftraggeber, Schadenort/Projekt, Versicherung, Schadennummer,
-  Versicherungsnummer und empfohlene/beauftragte Maßnahmen.
-- Eigene druckfähige Auftragserteilungsansicht.
-- Zentrale Seite "Formulare & Nachweise" je Schaden.
-- Alle bereits vorhandenen Test-Rapporte können als A4-Rapport geöffnet,
-  gedruckt oder als PDF gespeichert werden.
-- Rapportansicht enthält Projekt, Adresse, Auftraggeber, Rapport-Nr.,
-  Mitarbeiter, Arbeitszeiten, Pause, Fahrzeug/Fahrten,
-  Leistungsbeschreibung, Folgearbeiten, Geräte, Material und Unterschriften.
-- Alle vorhandenen Energieeinträge können als Stromverbrauchsnachweis
-  geöffnet, gedruckt oder als PDF gespeichert werden.
-- Energieverbrauchsnachweis enthält Kunde/Schadenort, Projekt-/Schadennr.,
-  Versicherung, Wohneinheit/Bereich, Beginn/Ende, Zählerstände,
-  Verbrauch kWh, optional Strompreis und errechnete Kosten.
-- Layout verwendet Logo und Firmendaten der Firma, unter der der Schaden angelegt ist.
+NEU IN v0.9.3:
+1. Fester Schaden-Ablauf:
+   Schaden -> Angebot -> Auftragserteilung -> Ausführung -> Abschluss -> Rechnung
+   Als sichtbare Workflow-Leiste oben in der Schadenakte.
 
-WICHTIG ZUR AUFTRAGSERTEILUNG:
-Der genaue juristische Wortlaut der ursprünglich hochgeladenen
-Abtretungserklärung war in den aktuell verfügbaren Quelldaten nicht
-vollständig extrahiert. Deshalb wird in dieser Version kein erfundener
-langer Abtretungstext eingefügt. Struktur, Versicherungsfelder,
-Beauftragung und Unterschriftsbereich sind enthalten.
+2. Auftragserteilung aus Angebot:
+   Button erzeugt die Auftragserteilung aus dem letzten Angebot.
+   Angebotspositionen werden als beauftragte Maßnahmen übernommen.
+   Auftraggeber-/Versicherungsdaten kommen aus der Schadenakte.
+
+3. Rechnung aus Angebot:
+   Rechnung kann direkt aus dem bestehenden Angebot erzeugt werden.
+   Positionen und Preise des Angebots werden übernommen.
+
+4. Tatsächliche Trocknung in Rechnung:
+   "Tatsächliche Trocknung anwenden" ersetzt Trocknungspositionen durch
+   die real erfassten Geräte/Laufzeiten aus dem Schaden.
+   Ein bereits vorhandener Angebotspreis je Einheit wird beibehalten.
+
+5. Verbrauch:
+   Eigene Seite "Ausführung & Verbrauch".
+   Pro Gerät:
+   - automatische Laufzeit aus Aufstellung/Abbau
+   - Leistung aus Gerätestamm (W -> kW)
+   - kWh = kW x Tage x 24
+   - Tage, kW oder kWh können überschrieben werden.
+   - GesamtkWh werden oben summiert.
+
+6. Optik der App:
+   - kleinere Schrift
+   - kompaktere Überschriften
+   - kleinere, weniger klobige Buttons
+   - engere Karten und Formulare
+   - eckigere/ruhigere Tabs
+   - kompaktere Tabellen
+   - mobile Darstellung bleibt erhalten
+
+DATENBANK:
+Die dafür nötigen Verbrauchsfelder wurden bereits produktiv angelegt.
+Keine weitere Migration für dieses Paket nötig.
 
 UPLOAD:
-1. ZIP entpacken.
-2. Alle enthaltenen Dateien in GitHub mit gleicher Ordnerstruktur hochladen.
-3. Vorhandene AssignmentEditor.tsx ersetzen.
-4. Commit changes.
-5. Vercel-Build abwarten.
-
-Bedienung:
-Schaden -> Dokumente -> Auftragserteilung -> "Formulare / Nachweise".
-Dort sind Auftragserteilung, Rapporte und Energieverbrauchsnachweise gesammelt.
+- ZIP entpacken.
+- Den kompletten Inhalt mit gleicher Ordnerstruktur in GitHub hochladen.
+- Vorhandene Dateien ersetzen.
+- Wichtig: app/ui-polish.css und app/layout.tsx mit hochladen.
+- Commit changes.
+- Vercel-Build abwarten.
