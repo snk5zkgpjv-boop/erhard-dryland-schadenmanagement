@@ -1,11 +1,30 @@
 import {getSql} from "@/lib/db";
 function clean(v:unknown){const t=typeof v==="string"?v.trim():"";return t===""?null:t}
-export async function GET(){try{const sql=getSql();const rows=await sql`SELECT c.id,c.title,c.case_number,c.status,c.damage_type,c.object_street,c.object_postal_code,c.object_city,c.created_at,co.code AS company_code,co.name AS company_name FROM cases c JOIN companies co ON co.id=c.company_id ORDER BY c.created_at DESC`;return Response.json(rows)}catch(error){return Response.json({error:error instanceof Error?error.message:"Schadensfälle konnten nicht geladen werden."},{status:500})}}
+
+export async function GET(request:Request){
+ try{
+  const userId=request.headers.get("x-app-user-id");
+  if(!userId)return Response.json({error:"Nicht angemeldet."},{status:401});
+  const sql=getSql();
+  const rows=await sql`SELECT c.id,c.title,c.case_number,c.status,c.damage_type,c.object_street,c.object_postal_code,c.object_city,c.created_at,co.code AS company_code,co.name AS company_name
+    FROM cases c
+    JOIN companies co ON co.id=c.company_id
+    JOIN app_user_companies auc ON auc.company_id=c.company_id AND auc.user_id=${userId}
+    ORDER BY c.created_at DESC`;
+  return Response.json(rows)
+ }catch(error){return Response.json({error:error instanceof Error?error.message:"Schadensfälle konnten nicht geladen werden."},{status:500})}
+}
+
 export async function POST(request:Request){
  try{
+  const userId=request.headers.get("x-app-user-id");
+  if(!userId)return Response.json({error:"Nicht angemeldet."},{status:401});
   const body=await request.json();const companyId=clean(body.company_id);const title=clean(body.title);
   if(!companyId||!title)return Response.json({error:"Firma und Bezeichnung sind Pflichtfelder."},{status:400});
   const sql=getSql();
+  const allowed=await sql`SELECT 1 FROM app_user_companies WHERE user_id=${userId} AND company_id=${companyId} LIMIT 1`;
+  if(!allowed.length)return Response.json({error:"Du bist dieser Firma nicht zugeordnet."},{status:403});
+
   const firstName=clean(body.customer_first_name),lastName=clean(body.customer_last_name),companyName=clean(body.customer_company_name);
   const customerStreet=clean(body.customer_street),customerPostal=clean(body.customer_postal_code),customerCity=clean(body.customer_city),customerEmail=clean(body.customer_email),customerPhone=clean(body.customer_phone);
   let customerId:string|null=null;

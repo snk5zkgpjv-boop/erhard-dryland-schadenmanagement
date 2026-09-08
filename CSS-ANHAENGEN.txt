@@ -1,0 +1,7 @@
+Diese CSS-Regeln bitte NICHT als Datei hochladen. Sie sind nur Dokumentation.
+Die eigentliche Benutzerverwaltung funktioniert auch ohne diese Regeln, nur weniger schön formatiert.
+
+.companyChecks{display:flex;gap:8px;flex-wrap:wrap}
+.companyChecks .checkRow{min-width:180px;flex:1}
+.userAccessRow{display:grid;grid-template-columns:minmax(160px,1fr) 130px minmax(150px,auto) auto;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding:12px 0}
+@media(max-width:800px){.userAccessRow{grid-template-columns:1fr}.userAccessRow select{width:100%}}

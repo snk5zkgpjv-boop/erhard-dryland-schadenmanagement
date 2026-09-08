@@ -1,10 +1,22 @@
-UPDATE v0.8.4 – TROCKNUNGSGERÄTE & MENGENAUSWAHL
+UPDATE v0.8.5 – GEMEINSAMER GERÄTEKATALOG + FIRMENZUGRIFF
 
+Die Datenbankänderung app_user_companies wurde bereits produktiv eingespielt.
+Robert ist bereits ERHARD und DRYLAND zugeordnet.
+
+Wichtig:
+- Gerätekatalog ist für beide Firmen gemeinsam.
+- Erhard- und Dryland-Schäden bleiben getrennt.
+- Benutzer sehen nur Schäden ihrer zugeordneten Firma/Firmen.
+- Direkte URLs zu fremden Schäden werden serverseitig blockiert.
+- Admin kann Benutzer einer oder beiden Firmen zuordnen.
+
+UPLOAD:
 1. ZIP entpacken.
-2. Gesamten Inhalt bei GitHub hochladen und vorhandene Dateien ersetzen.
-3. Commit changes.
-4. Vercel-Build abwarten.
+2. Alle enthaltenen Dateien mit gleicher Ordnerstruktur zu GitHub hochladen.
+3. Vorhandene Dateien ersetzen.
+4. Commit changes.
+5. Vercel-Build abwarten.
 
-Der Standard-Gerätekatalog wurde für Dryland bereits direkt in Neon angelegt.
-In der App kannst du im Reiter Trocknung die Anzahl je Modell mit + / − auswählen.
-Über „+ Neues Gerät anlegen“ kommst du direkt in die Geräteverwaltung und kannst jederzeit weitere Geräte ergänzen.
+Hinweis zu app/globals.css:
+Diese Datei enthält NUR die neuen Zusatzregeln. NICHT als alleinigen Ersatz der bisherigen globals.css verwenden.
+Die Regeln müssen ans Ende der bestehenden globals.css angehängt werden.
