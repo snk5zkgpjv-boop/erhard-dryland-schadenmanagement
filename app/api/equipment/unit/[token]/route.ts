@@ -1,0 +1,13 @@
+import {getSql} from "@/lib/db";
+function t(v:any){return v===null||v===undefined?null:String(v).trim()||null}
+export async function GET(_r:Request,{params}:{params:Promise<{token:string}>}){
+ try{const{token}=await params,sql=getSql();const u=await sql`SELECT u.*,e.equipment_code,e.name equipment_name,e.equipment_type,e.power_watts FROM equipment_units u JOIN equipment e ON e.id=u.equipment_id WHERE u.qr_token::text=${token} LIMIT 1`;if(!u.length)return Response.json({error:"Gerät nicht gefunden."},{status:404});const m=await sql`SELECT * FROM equipment_maintenance WHERE equipment_unit_id=${u[0].id} ORDER BY maintenance_date DESC,created_at DESC`;return Response.json({...u[0],maintenance:m})}catch(e){return Response.json({error:e instanceof Error?e.message:"Gerät konnte nicht geladen werden."},{status:500})}
+}
+export async function POST(r:Request,{params}:{params:Promise<{token:string}>}){
+ if(!["admin","techniker"].includes(r.headers.get("x-app-role")||""))return Response.json({error:"Keine Berechtigung."},{status:403});
+ try{const{token}=await params,b=await r.json(),sql=getSql();const u=await sql`SELECT id,maintenance_interval_months FROM equipment_units WHERE qr_token::text=${token} LIMIT 1`;if(!u.length)return Response.json({error:"Gerät nicht gefunden."},{status:404});const date=t(b.maintenance_date)||new Date().toISOString().slice(0,10);let next=t(b.next_due_date);if(!next){const d=new Date(date+"T12:00:00Z");d.setUTCMonth(d.getUTCMonth()+Number(u[0].maintenance_interval_months||12));next=d.toISOString().slice(0,10)}await sql`INSERT INTO equipment_maintenance(equipment_unit_id,maintenance_date,maintenance_type,performed_by,notes,next_due_date,cost) VALUES(${u[0].id},${date}::date,${t(b.maintenance_type)},${t(b.performed_by)},${t(b.notes)},${next}::date,${Number(b.cost)||null})`;return Response.json({ok:true})}catch(e){return Response.json({error:e instanceof Error?e.message:"Wartung konnte nicht gespeichert werden."},{status:500})}
+}
+export async function PATCH(r:Request,{params}:{params:Promise<{token:string}>}){
+ if(r.headers.get("x-app-role")!=="admin")return Response.json({error:"Nur Admin."},{status:403});
+ try{const{token}=await params,b=await r.json(),sql=getSql();await sql`UPDATE equipment_units SET serial_number=${t(b.serial_number)},maintenance_interval_months=${Math.max(1,Number(b.maintenance_interval_months)||12)},commissioned_at=${t(b.commissioned_at)}::date,updated_at=now() WHERE qr_token::text=${token}`;return Response.json({ok:true})}catch(e){return Response.json({error:e instanceof Error?e.message:"Gerät konnte nicht aktualisiert werden."},{status:500})}
+}

@@ -1,0 +1,17 @@
+Diese Regeln bitte ans Ende von app/globals.css anhängen:
+
+.unitGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.unitCard{border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.unitCard img{width:180px;max-width:100%;align-self:center}
+.documentSheet{width:210mm;min-height:297mm;margin:12px auto;background:#fff;padding:18mm 18mm 20mm;box-sizing:border-box;position:relative}
+.documentHeader{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;font-size:12px}
+.documentHeader img{max-width:230px;max-height:75px;object-fit:contain}
+.docAddress{margin-top:26mm;line-height:1.5}
+.docTitleRow{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin:18mm 0 8mm}
+.docTitleRow h1{font-size:28px;margin:0}
+.docTitleRow table{border-collapse:collapse;font-size:12px}.docTitleRow th,.docTitleRow td{padding:3px 8px;text-align:left}
+.documentItems{width:100%;border-collapse:collapse;font-size:12px}.documentItems th{border-bottom:2px solid #222;padding:7px 5px;text-align:left}.documentItems td{border-bottom:1px solid #ddd;padding:8px 5px;vertical-align:top}.documentItems .num{text-align:right;white-space:nowrap}
+.docTotals{margin-left:auto;margin-top:10mm;width:75mm}.docTotals>div{display:flex;justify-content:space-between;padding:4px 0}.docTotals .grand{border-top:2px solid #222;font-size:16px;padding-top:7px}
+.documentFooter{position:absolute;left:18mm;right:18mm;bottom:10mm;border-top:1px solid #bbb;padding-top:4mm;font-size:10px;color:#555}
+@media(max-width:900px){.documentSheet{width:100%;min-height:auto;padding:20px}.docTitleRow{flex-direction:column}.documentFooter{position:static;margin-top:30px}}
+@media print{body{background:#fff!important}.documentSheet{margin:0;width:210mm;min-height:297mm;box-shadow:none}.noPrint{display:none!important}}

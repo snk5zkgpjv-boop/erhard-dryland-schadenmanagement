@@ -1,0 +1,2 @@
+import Link from "next/link";import {requirePageUser} from "@/lib/auth";import EquipmentUnits from "@/components/EquipmentUnits";
+export default async function EquipmentUnitsPage({params}:{params:Promise<{id:string}>}){await requirePageUser(["admin","techniker"]);const{id}=await params;return <main className="shell"><div className="topbar"><Link className="back" href="/equipment">← Geräteverwaltung</Link></div><section className="hero"><span className="pill">QR & Wartung</span><h1>Einzelgeräte</h1></section><EquipmentUnits equipmentId={id}/></main>}

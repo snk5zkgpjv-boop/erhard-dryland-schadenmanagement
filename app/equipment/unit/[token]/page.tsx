@@ -1,0 +1,2 @@
+import Link from "next/link";import {requirePageUser} from "@/lib/auth";import EquipmentUnitDetail from "@/components/EquipmentUnitDetail";
+export default async function UnitPage({params}:{params:Promise<{token:string}>}){await requirePageUser(["admin","techniker"]);const{token}=await params;return <main className="shell"><div className="topbar noPrint"><Link className="back" href="/equipment">← Geräteverwaltung</Link></div><EquipmentUnitDetail token={token}/></main>}
