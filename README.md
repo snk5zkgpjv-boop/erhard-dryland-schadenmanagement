@@ -1,8 +1,8 @@
-# Erhard & Dryland Schadenmanagement – v0.8.3
+# Erhard & Dryland Schadenmanagement – v0.8.4
 
-Schwerpunkt dieses Updates:
-- Auftraggeberanschrift getrennt vom Schadensort.
-- Bestehende Schäden/Stammdaten nachträglich bearbeiten.
-- Schadensbericht direkt bearbeiten.
-- Gespeichertes Berichtsdatum zuverlässig ausgeben.
-- Unbegrenzte Schadensbilder mit automatischen Zusatzseiten und dynamischer Seitenzählung.
+Neu:
+- Trotec-Gerätekatalog für Dryland ist in der Datenbank vorbelegt.
+- Gerätemengen in der Trocknung werden per Plus/Minus ausgewählt.
+- Suche nach Geräten im Trocknungsformular.
+- Neues Gerät kann direkt über „+ Neues Gerät anlegen“ ergänzt werden.
+- Vorhandene Geräteverwaltung mit manueller Anlage und KI-Typenschilderkennung bleibt erhalten.

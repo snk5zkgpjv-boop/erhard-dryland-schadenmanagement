@@ -68,3 +68,10 @@ input[type=file]{background:#fff}
 @media(max-width:700px){.userRow{grid-template-columns:1fr}.userRow select{width:100%}}
 
 .sectionHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.sectionHeader h2{margin-top:0}@media(max-width:700px){.sectionHeader{flex-direction:column}}
+
+.compactMeasurement{grid-template-columns:1.15fr 2.3fr 1fr}
+.compactMeasurement>div:last-child{border-right:0}
+.compactMeasurement .small{line-height:1.25}
+@media(max-width:900px){.compactMeasurement{grid-template-columns:1fr}}
+
+.equipmentSearch{width:100%;margin:10px 0 8px}.quantityList{max-height:460px;overflow:auto}.equipmentQtyRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 4px;border-bottom:1px solid var(--line)}.equipmentQtyName{min-width:0}.qtyControl{display:flex;align-items:center;gap:7px;flex:0 0 auto}.qtyControl button{width:38px;height:38px;border:1px solid var(--line);background:#fff;border-radius:9px;font-size:22px;line-height:1;cursor:pointer}.qtyControl span{min-width:28px;text-align:center;font-size:18px;font-weight:700}.selectedDeviceSummary{margin-top:12px;padding:10px 12px;background:#f4f7f9;border-radius:10px}@media(max-width:600px){.equipmentQtyRow{align-items:flex-start}.qtyControl button{width:42px;height:42px}}

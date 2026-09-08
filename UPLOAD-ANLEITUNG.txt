@@ -1,21 +1,10 @@
-KORREKTUR v0.8.3.3 – TROTEC T3000 / MESSVERFAHREN
+UPDATE v0.8.4 – TROCKNUNGSGERÄTE & MENGENAUSWAHL
 
-Neu bei Messungen:
-- Standardgerät ist Trotec T3000.
-- Standardauswahl: Trotec T3000 + TS 660 SDI (Messkugel).
-- Weitere Auswahl: Trotec T3000 + Widerstandselektroden.
-- Messverfahren weiterhin auswählbar: kapazitiv, Widerstand, CM, Thermografie, Sonstiges.
-
-Im Schadensbericht unter "Messtechnik":
-- Trotec T3000 wird automatisch angekreuzt, sobald Messungen vorhanden sind.
-- TS 660 SDI / Messkugel wird angekreuzt, wenn kapazitiv gemessen wurde bzw. dieser Sensor gewählt wurde.
-- Widerstandsmessung wird angekreuzt, wenn sie bei einer Messung verwendet wurde.
-- CM-Messung und Thermografie werden ebenfalls automatisch entsprechend angekreuzt.
-- Es werden alle im Schaden verwendeten Messverfahren aufgeführt.
-
-Upload:
 1. ZIP entpacken.
-2. Die zwei enthaltenen Dateien mit gleicher Ordnerstruktur bei GitHub hochladen.
-3. Vorhandene Dateien ersetzen.
-4. Commit changes.
-5. Vercel-Build abwarten.
+2. Gesamten Inhalt bei GitHub hochladen und vorhandene Dateien ersetzen.
+3. Commit changes.
+4. Vercel-Build abwarten.
+
+Der Standard-Gerätekatalog wurde für Dryland bereits direkt in Neon angelegt.
+In der App kannst du im Reiter Trocknung die Anzahl je Modell mit + / − auswählen.
+Über „+ Neues Gerät anlegen“ kommst du direkt in die Geräteverwaltung und kannst jederzeit weitere Geräte ergänzen.
