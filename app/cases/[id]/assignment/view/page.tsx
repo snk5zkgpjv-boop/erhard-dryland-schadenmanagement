@@ -42,7 +42,7 @@ export default async function AssignmentView({params}:{params:Promise<{id:string
     </div>
    </header>
 
-   <h1 className={styles.mainTitle}>Auftragserteilung</h1>
+   <h1 className={styles.mainTitle}>Auftragserteilung{x.assignment_number?` ${x.assignment_number}`:""}</h1>
    <section className={styles.orderBox}>
     <p className={styles.lead}>Hiermit erteilt Herr / Frau / Firma</p>
     <div className={styles.fields2}>

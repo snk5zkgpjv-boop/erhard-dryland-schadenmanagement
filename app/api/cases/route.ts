@@ -1,4 +1,5 @@
 import {getSql} from "@/lib/db";
+import {allocateNumber,syncManualNumber} from "@/lib/number-sequences";
 function clean(v:unknown){const t=typeof v==="string"?v.trim():"";return t===""?null:t}
 
 export async function GET(request:Request){
@@ -33,8 +34,11 @@ export async function POST(request:Request){
     VALUES (${companyName?"company":"person"},${companyName},${firstName},${lastName},${customerStreet},${customerPostal},${customerCity},${customerEmail},${customerPhone}) RETURNING id`;
    customerId=customers[0].id as string
   }
+  const manual=clean(body.case_number);
+  const caseNumber=manual||await allocateNumber(sql,companyId,"project",new Date());
+  if(manual)await syncManualNumber(sql,companyId,"project",new Date(),manual);
   const rows=await sql`INSERT INTO cases(company_id,customer_id,case_number,title,status,damage_type,object_street,object_postal_code,object_city,floor,unit,insurer,insurance_number,claim_number,reference_number,damage_cause,damage_description,recommended_action,started_at)
-   VALUES (${companyId},${customerId},${clean(body.case_number)},${title},'neu',${clean(body.damage_type)||'wasserschaden'},${clean(body.object_street)},${clean(body.object_postal_code)},${clean(body.object_city)},${clean(body.floor)},${clean(body.unit)},${clean(body.insurer)},${clean(body.insurance_number)},${clean(body.claim_number)},${clean(body.reference_number)},${clean(body.damage_cause)},${clean(body.damage_description)},${clean(body.recommended_action)},now()) RETURNING id`;
-  return Response.json({id:rows[0].id},{status:201})
+   VALUES (${companyId},${customerId},${caseNumber},${title},'neu',${clean(body.damage_type)||'wasserschaden'},${clean(body.object_street)},${clean(body.object_postal_code)},${clean(body.object_city)},${clean(body.floor)},${clean(body.unit)},${clean(body.insurer)},${clean(body.insurance_number)},${clean(body.claim_number)},${clean(body.reference_number)},${clean(body.damage_cause)},${clean(body.damage_description)},${clean(body.recommended_action)},now()) RETURNING id,case_number`;
+  return Response.json({id:rows[0].id,case_number:rows[0].case_number},{status:201})
  }catch(error){return Response.json({error:error instanceof Error?error.message:"Schaden konnte nicht angelegt werden."},{status:500})}
 }

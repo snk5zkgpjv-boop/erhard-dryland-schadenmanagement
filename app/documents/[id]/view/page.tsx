@@ -7,7 +7,7 @@ import styles from "./page.module.css";
 function money(v:any){return Number(v||0).toLocaleString("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2})}
 function qty(v:any){return Number(v||0).toLocaleString("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2})}
 function date(v:any){return v?new Date(v).toLocaleDateString("de-DE"):""}
-function period(a:any,b:any){const x=date(a),y=date(b);return x&&y&&x!==y?`${x} - ${y}`:x||y||""}
+function period(a:any,b:any){const x=date(a),y=date(b);return x&&y&&x!==y?`${x} – ${y}`:x||y||""}
 function inferGroup(x:any){
  const c=String(x.category||"").trim();
  if(c&&!/Excel|Dederer|AXA|Standardleistung|eigene/i.test(c))return c;
@@ -18,25 +18,34 @@ function inferGroup(x:any){
  if(/an\/abfahrt|anfahrt|fahrzeug/.test(s))return "Fahrzeugkostenanteil";
  return "Sonstige Leistungen";
 }
-function weight(x:any){return 3+Math.ceil(String(x.description||"").length/95)}
+function itemMm(x:any){
+ const text=String(x.description||"").replace(/\n+/g," ").trim();
+ const lines=Math.max(1,Math.ceil(text.length/74));
+ return 5.0+lines*3.45;
+}
+function groupMm(g:any){return 6.2+g.items.reduce((s:number,x:any)=>s+itemMm(x),0)+6.2}
 function paginate(groups:any[]){
- const pages:any[][]=[];let page:any[]=[],used=0,cap=15;
+ const pages:any[][]=[];let page:any[]=[],used=0;
+ const firstCap=143,otherCap=226;
+ let cap=firstCap;
  for(const g of groups){
-  const gw=2+g.items.reduce((s:number,x:any)=>s+weight(x),0);
-  if(page.length&&used+gw>cap){pages.push(page);page=[];used=0;cap=34}
-  if(gw>cap&&g.items.length>1){
-   let part:any[]=[];
-   for(const item of g.items){
-    const w=weight(item);
-    if(part.length&&used+2+part.reduce((s:number,x:any)=>s+weight(x),0)+w>cap){
-      page.push({name:g.name,items:part});pages.push(page);page=[];used=0;cap=34;part=[]
-    }
-    part.push(item)
+  const gh=groupMm(g);
+  if(page.length&&used+gh>cap){pages.push(page);page=[];used=0;cap=otherCap}
+  if(gh<=cap-used){page.push(g);used+=gh;continue}
+  let part:any[]=[];
+  for(const item of g.items){
+   const ih=itemMm(item),overhead=12.4;
+   const partH=overhead+part.reduce((s:number,x:any)=>s+itemMm(x),0);
+   if(part.length&&used+partH+ih>cap){
+    page.push({name:g.name,items:part,continued:true});pages.push(page);
+    page=[];used=0;cap=otherCap;part=[]
    }
-   if(part.length){page.push({name:g.name,items:part});used+=2+part.reduce((s:number,x:any)=>s+weight(x),0)}
-  }else{page.push(g);used+=gw}
+   part.push(item)
+  }
+  if(part.length){page.push({name:g.name,items:part,continued:false});used+=12.4+part.reduce((s:number,x:any)=>s+itemMm(x),0)}
  }
- if(page.length)pages.push(page);return pages.length?pages:[[]]
+ if(page.length)pages.push(page);
+ return pages.length?pages:[[]]
 }
 
 export default async function DocumentView({params}:{params:Promise<{id:string}>}){
@@ -44,7 +53,7 @@ export default async function DocumentView({params}:{params:Promise<{id:string}>
  const rows=await sql`SELECT d.*,
    co.code company_code,co.name company_name,co.legal_name,co.street company_street,co.postal_code company_postal_code,co.city company_city,
    co.phone,co.mobile,co.email,co.tax_number,co.vat_id,co.iban,co.bic,co.bank_name,co.logo_url,co.footer_json,
-   c.title case_title,c.case_number,c.reference_number,c.object_street,c.object_postal_code,c.object_city,
+   c.title case_title,c.case_number,c.reference_number,c.claim_number,c.object_name,c.object_street,c.object_postal_code,c.object_city,
    cu.first_name customer_first_name,cu.last_name customer_last_name,cu.company_name customer_company_name,
    cu.street customer_street,cu.postal_code customer_postal_code,cu.city customer_city
   FROM documents d JOIN companies co ON co.id=d.company_id
@@ -58,7 +67,10 @@ export default async function DocumentView({params}:{params:Promise<{id:string}>
  const logo=d.logo_url||(d.company_code==="DRYLAND"?"/dryland-logo.png":"/erhard-logo.png"),footer=d.footer_json||{};
  const isInvoice=d.document_type==="rechnung",title=isInvoice?`Rechnung ${d.document_number||""}`:`Angebot ${d.document_number||""}`;
  const servicePeriod=period(d.service_period_from,d.service_period_to),editor=footer.default_editor||"";
- const delivery=[d.delivery_street||d.object_street,[d.delivery_postal_code||d.object_postal_code,d.delivery_city||d.object_city].filter(Boolean).join(" ")].filter(Boolean).join(", ");
+ const deliveryName=d.delivery_name||d.object_name||d.case_title||"";
+ const deliveryStreet=d.delivery_street||d.object_street||"";
+ const deliveryPlace=[d.delivery_postal_code||d.object_postal_code,d.delivery_city||d.object_city].filter(Boolean).join(" ");
+ const reference=String(d.reference_number||"").trim();
  let carry=0;
  return <main className={styles.screen}>
   <div className={`shell noPrint ${styles.toolbar}`}><Link className="back" href={`/documents/${id}`}>← Bearbeiten</Link><PrintButton/></div>
@@ -68,7 +80,15 @@ export default async function DocumentView({params}:{params:Promise<{id:string}>
    return <article className={styles.page} key={pi}>
     {pi===0?<><header className={styles.header}><img src={logo} alt={d.company_name}/><div className={styles.rule}/></header>
      <section className={styles.address}><div className={styles.sender}>{d.company_name} • {d.company_street||""} • {[d.company_postal_code,d.company_city].filter(Boolean).join(" ")}</div><div className={styles.recipient}><strong>{customer}</strong><br/>{d.customer_street||""}<br/>{[d.customer_postal_code,d.customer_city].filter(Boolean).join(" ")}</div></section>
-     <section className={styles.docHead}><div><h1>{title}</h1>{(d.reference_number||d.case_number)&&<div>zu LWS / VM-Nr.: {d.reference_number||d.case_number}</div>}</div><div className={styles.meta}><div><span>Datum:</span><strong>{date(d.document_date)}</strong></div>{servicePeriod&&<div><span>Leistungszeitraum:</span><strong>{servicePeriod}</strong></div>}{editor&&<div><span>Bearbeiter:</span><strong>{editor}</strong></div>}{delivery&&<div><span>Leistungsadresse:</span><strong>{delivery}</strong></div>}</div></section>
+     <section className={styles.docHead}>
+      <div className={styles.titleBlock}><h1>{title}</h1>{reference&&<div className={styles.reference}>Referenz: {reference}</div>}{d.case_number&&<div className={styles.projectRef}>Projekt-Nr.: {d.case_number}</div>}{d.claim_number&&<div className={styles.projectRef}>Schaden-Nr.: {d.claim_number}</div>}</div>
+      <div className={styles.meta}>
+       <div className={styles.metaRow}><span>Datum</span><strong>{date(d.document_date)}</strong></div>
+       {servicePeriod&&<div className={styles.metaRow}><span>Leistungszeitraum</span><strong>{servicePeriod}</strong></div>}
+       {editor&&<div className={styles.metaRow}><span>Bearbeiter</span><strong>{editor}</strong></div>}
+       {(deliveryName||deliveryStreet||deliveryPlace)&&<div className={`${styles.metaRow} ${styles.deliveryRow}`}><span>Leistungsort</span><strong>{deliveryName&&<>{deliveryName}<br/></>}{deliveryStreet&&<>{deliveryStreet}<br/></>}{deliveryPlace}</strong></div>}
+      </div>
+     </section>
      <p className={styles.intro}>{isInvoice?"für die Erledigung der von Ihnen beauftragten Tätigkeiten berechnen wir Ihnen wie folgt:":"für die von Ihnen angefragten Leistungen erlauben wir uns wie folgt anzubieten:"}</p>
     </>:<div className={styles.carryTop}>Übertrag: € {money(prior)}</div>}
     <table className={styles.table}><thead><tr><th className={styles.pos}>Pos</th><th>Beschreibung</th><th className={styles.price}>Einzelpreis €</th><th className={styles.amount}>Menge</th><th className={styles.sum}>Summe €</th></tr></thead>
@@ -84,5 +104,5 @@ export default async function DocumentView({params}:{params:Promise<{id:string}>
 }
 function Group({g,groupNo}:{g:any,groupNo:number}){
  const subtotal=g.items.reduce((s:number,x:any)=>s+Number(x.line_total||0),0);
- return <>{<tr className={styles.group}><td colSpan={5}>{g.name}</td></tr>}{g.items.map((x:any,i:number)=><tr key={x.id} className={styles.item}><td>{groupNo}.{i+1}</td><td><strong>{String(x.description||"").split("\n")[0]}</strong>{String(x.description||"").includes("\n")&&<div className={styles.details}>{String(x.description).split("\n").slice(1).join("\n")}</div>}</td><td className={styles.num}>{money(x.unit_price)}</td><td className={styles.num}>{qty(x.quantity)} {x.unit||""}</td><td className={styles.num}>{money(x.line_total)}</td></tr>)}<tr className={styles.subtotal}><td colSpan={4}>Zwischensumme {g.name}</td><td>€ {money(subtotal)}</td></tr></>
+ return <><tr className={styles.group}><td colSpan={5}>{g.name}{g.continued?" (Fortsetzung)":""}</td></tr>{g.items.map((x:any,i:number)=><tr key={x.id||i} className={styles.item}><td>{groupNo}.{i+1}</td><td><strong>{String(x.description||"").split("\n")[0]}</strong>{String(x.description||"").includes("\n")&&<div className={styles.details}>{String(x.description).split("\n").slice(1).join("\n")}</div>}</td><td className={styles.num}>{money(x.unit_price)}</td><td className={styles.num}>{qty(x.quantity)} {x.unit||""}</td><td className={styles.num}>{money(x.line_total)}</td></tr>)}<tr className={styles.subtotal}><td colSpan={4}>Zwischensumme {g.name}</td><td>€ {money(subtotal)}</td></tr></>
 }

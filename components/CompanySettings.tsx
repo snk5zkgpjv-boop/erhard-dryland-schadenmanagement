@@ -1,6 +1,7 @@
 "use client";
 import {FormEvent,useEffect,useState} from "react";
 import Link from "next/link";
+import NumberSequenceSettings from "@/components/NumberSequenceSettings";
 export default function CompanySettings(){
  const[companies,setCompanies]=useState<any[]>([]),[selected,setSelected]=useState(""),[data,setData]=useState<any>(null),[msg,setMsg]=useState(""),[err,setErr]=useState("");
  useEffect(()=>{fetch("/api/companies",{cache:"no-store"}).then(r=>r.json()).then(j=>{if(Array.isArray(j)){setCompanies(j);if(j[0])setSelected(j[0].id)}}).catch(()=>setErr("Firmen konnten nicht geladen werden."))},[]);
@@ -42,6 +43,6 @@ export default function CompanySettings(){
    <div className="field"><label>Logo-Pfad / URL</label><input name="logo_url" defaultValue={data.logo_url||""} placeholder={data.code==="DRYLAND"?"/dryland-logo.png":"/erhard-logo.png"}/></div>
    <button className="button success" style={{marginTop:12}}>Firmendaten speichern</button>
   </form>
-  <div className="card"><h2>Vorschau der Fußzeile</h2><div className="companyPreview"><div><strong>Kontoinhaber:</strong> {f.account_holder||data.name}<br/><strong>IBAN:</strong> {data.iban||"–"}<br/><strong>BIC:</strong> {data.bic||"–"}<br/><strong>Steuernummer:</strong> {data.tax_number||"–"}</div><div><strong>{data.name}</strong><br/>{data.street||""}<br/>{[data.postal_code,data.city].filter(Boolean).join(" ")}<br/>Tel.: {data.phone||"–"}<br/>Mobil: {data.mobile||"–"}</div></div><p className="muted small" style={{marginTop:12}}>Diese Werte werden direkt in Kopf- und Fußzeile der Dokumente übernommen.</p></div>
+  <div><div className="card"><h2>Vorschau der Fußzeile</h2><div className="companyPreview"><div><strong>Kontoinhaber:</strong> {f.account_holder||data.name}<br/><strong>IBAN:</strong> {data.iban||"–"}<br/><strong>BIC:</strong> {data.bic||"–"}<br/><strong>Steuernummer:</strong> {data.tax_number||"–"}</div><div><strong>{data.name}</strong><br/>{data.street||""}<br/>{[data.postal_code,data.city].filter(Boolean).join(" ")}<br/>Tel.: {data.phone||"–"}<br/>Mobil: {data.mobile||"–"}</div></div><p className="muted small" style={{marginTop:12}}>Diese Werte werden direkt in Kopf- und Fußzeile der Dokumente übernommen.</p></div><div style={{marginTop:12}}><NumberSequenceSettings key={selected} companyId={selected}/></div></div>
  </div>
 }

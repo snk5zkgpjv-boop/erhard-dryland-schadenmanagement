@@ -20,13 +20,13 @@ export default function AssignmentEditor({caseId}:{caseId:string}){
      body:JSON.stringify(Object.fromEntries(new FormData(e.currentTarget).entries()))
    });
    const j=await r.json();if(!r.ok){setErr(j.error||"Fehler");return}
-   setD((x:any)=>({...x,id:j.id}));setMsg("Auftragserteilung gespeichert.")
+   setD((x:any)=>({...x,id:j.id,assignment_number:j.assignment_number||x?.assignment_number}));setMsg(`Auftragserteilung ${j.assignment_number||""} gespeichert.`)
  }
 
  if(!loaded)return <div className="card empty">Lade Auftragserteilung …</div>;
  const defaultScope=d?.scope||c?.recommended_action||c?.damage_description||"Leckageortung & Trocknung";
  return <form className="card" onSubmit={save}>
-  <div className="sectionHeader"><div><h2>Auftragserteilung</h2><p className="muted small">Auftraggeber-, Objekt- und Versicherungsdaten werden aus dem Schaden übernommen.</p></div>
+  <div className="sectionHeader"><div><h2>Auftragserteilung {d?.assignment_number?`· ${d.assignment_number}`:""}</h2><p className="muted small">Auftraggeber-, Objekt- und Versicherungsdaten werden aus dem Schaden übernommen.</p></div>
    <Link className="button secondary" href={`/cases/${caseId}/forms`}>Formulare / Nachweise</Link>
   </div>
   {msg&&<div className="notice">{msg}</div>}{err&&<div className="error">{err}</div>}

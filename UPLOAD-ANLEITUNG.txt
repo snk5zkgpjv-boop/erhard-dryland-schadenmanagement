@@ -1,32 +1,43 @@
-v0.9.6 – FOTO → ANGEBOTSENTWURF
+v0.9.7 – NUMMERNKREISE + DOKUMENTLAYOUT-KORREKTUR
 
-CUMULATIVE VERSION auf Basis v0.9.5.
+Diese Version ist kumulativ auf Basis v0.9.6.
 
-Neu:
-- Im Angebotseditor erscheint der Bereich „KI-Fotoassistent – Foto → Angebotsentwurf“.
-- Bis zu 6 Fotos von handschriftlichen Zetteln, Aufmaßen oder Baustellennotizen können ausgewählt werden.
-- Optional kann ein kurzer Zusatzhinweis mitgegeben werden.
-- Die KI erkennt:
-  * Kunde (wenn auf den Fotos vorhanden)
-  * Leistungsort (wenn vorhanden)
-  * Tätigkeiten / Leistungspositionen
-  * Maße, Wiederholungen und daraus eindeutige Mengen
-  * Zusatzaufwand wie größere Putzstärken
-  * Unsicherheiten / schlecht lesbare Stellen
-  * Suchbegriffe für den vorhandenen Artikelkatalog
-- Der Entwurf wird zuerst zur Prüfung angezeigt.
-- Erst nach Klick auf „Entwurf in Angebot übernehmen“ werden Positionen in den Angebotseditor übernommen.
-- Preise werden NICHT von der KI erfunden. Neue KI-Positionen starten mit 0,00 € und werden anschließend aus dem Artikelkatalog bzw. manuell bepreist.
-- Erkannter Leistungsort kann direkt in die Liefer-/Leistungsadresse übernommen werden.
-- Das fertige Angebot nutzt weiterhin das bereits eingebaute Erhard-/Dryland-Dokumentlayout, also dasselbe Layoutsystem wie Rechnung/Angebot.
-- OPENAI_API_KEY wird nur serverseitig verwendet.
-- Optional kann über OPENAI_VISION_MODEL ein anderes Bildmodell gesetzt werden; Standard ist gpt-5.6-luna.
+1. NUMMERNKREISE
+- Getrennte fortlaufende Nummern je Firma (Erhard / Dryland).
+- Getrennt für:
+  Projekt
+  Angebot
+  Rechnung
+  Auftragserteilung
+- Getrennt nach Jahr.
+- Im Bereich Firmendaten gibt es jetzt „Nummernkreise“.
+- Für jedes Jahr kann ein Startwert festgelegt werden.
+- Beispiel 2027: Startwert 1 -> 2027-001.
+- Auftragserteilung Standard: AE-2027-001.
+- Format, Präfix und Anzahl Stellen können bei Bedarf angepasst werden.
+- Aktueller Stand wird angezeigt.
+- Bereits verwendete Nummern werden nicht zurückgesetzt.
+- Bei neuen Projekten, Angeboten, Rechnungen und Auftragserteilungen wird die Nummer automatisch vergeben, wenn das Nummernfeld leer bleibt.
+- Bestehende Standardnummern wie 2026-045 werden beim erstmaligen Aufbau eines Nummernkreises berücksichtigt.
+- Die Datenbankmigration für number_sequences und assignment_number wurde bereits freigegeben und angewendet.
 
-Wichtig:
-- Keine Datenbankmigration erforderlich.
-- Bestehende Angebote/Rechnungen werden nicht verändert.
-- Der neue Assistent ist eine Vorstufe: erst erkennen → prüfen → übernehmen → Preise kontrollieren → speichern.
+2. ANGEBOT / RECHNUNG – LAYOUTKORREKTUR
+- Seitenaufteilung neu berechnet: Der bisher viel zu niedrige feste Grenzwert der ersten Seite wurde entfernt.
+- Gruppen wie Geräteeinsatz, Rapportarbeiten und Fahrzeugkosten werden deutlich besser auf den noch vorhandenen Platz verteilt.
+- Eine Gruppe wird nur auf die nächste Seite geschoben, wenn sie tatsächlich nicht mehr sinnvoll passt.
+- Leistungszeitraum und Datum wurden als saubere zweispaltige Metadatenzeilen formatiert.
+- Leistungsort wird mehrzeilig und sauber dargestellt.
+- Das aus der Beispielrechnung übernommene „zu LWS / VM-Nr.“ wird NICHT mehr pauschal angezeigt.
+- Die Projektnummer wird jetzt korrekt als „Projekt-Nr.“ angezeigt.
+- Eine echte Referenz wird nur angezeigt, wenn im Projekt tatsächlich reference_number gepflegt ist.
+- Eine Schadennummer wird nur angezeigt, wenn sie tatsächlich vorhanden ist.
+- Das Dokumentlayout bleibt grundsätzlich an der hochgeladenen Erhard-Rechnung orientiert.
 
-UPLOAD:
+3. WICHTIG
+- Wenn für 2027 andere Startwerte gewünscht sind: Firmendaten -> Nummernkreise -> Jahr 2027 hinzufügen -> Werte einstellen -> speichern.
+- Das Nummernfeld beim neuen Angebot / der neuen Rechnung einfach leer lassen, damit die automatische Vergabe greift.
+- Bestehende Dokumentnummern werden nicht geändert.
+
+UPLOAD
 ZIP entpacken und den Inhalt mit gleicher Ordnerstruktur in GitHub hochladen/ersetzen.
 Danach Commit und Vercel-Build abwarten.
