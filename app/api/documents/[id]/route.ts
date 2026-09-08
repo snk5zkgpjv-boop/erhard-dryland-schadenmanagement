@@ -1,5 +1,66 @@
 import {getSql} from "@/lib/db";
 function txt(v:unknown){const t=typeof v==="string"?v.trim():"";return t===""?null:t}
 function num(v:unknown){const n=Number(v);return Number.isFinite(n)?n:0}
-export async function GET(_r:Request,{params}:{params:Promise<{id:string}>}){try{const{id}=await params,sql=getSql();const d=await sql`SELECT d.*,c.title case_title,c.object_street,c.object_postal_code,c.object_city,c.customer_id,co.code company_code,co.name company_name,cu.first_name,cu.last_name,cu.company_name customer_company_name FROM documents d LEFT JOIN cases c ON c.id=d.case_id JOIN companies co ON co.id=d.company_id LEFT JOIN customers cu ON cu.id=c.customer_id WHERE d.id=${id} LIMIT 1`;if(!d.length)return Response.json({error:"Dokument nicht gefunden."},{status:404});const items=await sql`SELECT * FROM document_items WHERE document_id=${id} ORDER BY sort_order,created_at`;return Response.json({...d[0],items})}catch(e){return Response.json({error:e instanceof Error?e.message:"Dokument konnte nicht geladen werden."},{status:500})}}
-export async function PUT(r:Request,{params}:{params:Promise<{id:string}>}){try{const{id}=await params,b=await r.json(),sql=getSql(),items=Array.isArray(b.items)?b.items:[];const net=items.reduce((s:any,x:any)=>s+num(x.quantity)*num(x.unit_price),0),vat=items.reduce((s:any,x:any)=>s+num(x.quantity)*num(x.unit_price)*(num(x.vat_rate)/100),0);await sql`UPDATE documents SET document_type=${txt(b.document_type)},document_number=${txt(b.document_number)},document_date=COALESCE(${txt(b.document_date)}::date,CURRENT_DATE),title=${txt(b.title)},status=${txt(b.status)||"entwurf"},net_total=${net},vat_total=${vat},gross_total=${net+vat},reverse_charge=${Boolean(b.reverse_charge)},updated_at=now() WHERE id=${id}`;await sql`DELETE FROM document_items WHERE document_id=${id}`;let n=1;for(const x of items){await sql`INSERT INTO document_items(document_id,position_no,category,description,quantity,unit,unit_price,vat_rate,line_total,source_type,sort_order) VALUES(${id},${String(n)},${txt(x.category)},${txt(x.description)},${num(x.quantity)},${txt(x.unit)},${num(x.unit_price)},${x.vat_rate===null||x.vat_rate===undefined||x.vat_rate===''?19:num(x.vat_rate)},${num(x.quantity)*num(x.unit_price)},${txt(x.source_type)||"catalog"},${n})`;n++}return Response.json({ok:true})}catch(e){return Response.json({error:e instanceof Error?e.message:"Dokument konnte nicht aktualisiert werden."},{status:500})}}
+
+export async function GET(_r:Request,{params}:{params:Promise<{id:string}>}){
+ try{
+  const{id}=await params,sql=getSql();
+  const d=await sql`
+    SELECT d.*,c.title case_title,c.object_street,c.object_postal_code,c.object_city,c.customer_id,
+           co.code company_code,co.name company_name,
+           cu.first_name,cu.last_name,cu.company_name customer_company_name,
+           cu.street customer_street,cu.postal_code customer_postal_code,cu.city customer_city
+    FROM documents d
+    LEFT JOIN cases c ON c.id=d.case_id
+    JOIN companies co ON co.id=d.company_id
+    LEFT JOIN customers cu ON cu.id=c.customer_id
+    WHERE d.id=${id} LIMIT 1`;
+  if(!d.length)return Response.json({error:"Dokument nicht gefunden."},{status:404});
+  const items=await sql`SELECT * FROM document_items WHERE document_id=${id} ORDER BY sort_order,created_at`;
+  return Response.json({...d[0],items})
+ }catch(e){return Response.json({error:e instanceof Error?e.message:"Dokument konnte nicht geladen werden."},{status:500})}
+}
+
+export async function PUT(r:Request,{params}:{params:Promise<{id:string}>}){
+ try{
+  const{id}=await params,b=await r.json(),sql=getSql();
+  const items=Array.isArray(b.items)?b.items:[];
+  const net=items.reduce((s:any,x:any)=>s+num(x.quantity)*num(x.unit_price),0);
+  const vat=items.reduce((s:any,x:any)=>s+num(x.quantity)*num(x.unit_price)*(num(x.vat_rate)/100),0);
+
+  await sql`
+    UPDATE documents SET
+      document_type=${txt(b.document_type)},
+      document_number=${txt(b.document_number)},
+      document_date=COALESCE(${txt(b.document_date)}::date,CURRENT_DATE),
+      title=${txt(b.title)},
+      status=${txt(b.status)||"entwurf"},
+      net_total=${net},vat_total=${vat},gross_total=${net+vat},
+      reverse_charge=${Boolean(b.reverse_charge)},
+      service_period_from=${txt(b.service_period_from)}::date,
+      service_period_to=${txt(b.service_period_to)}::date,
+      delivery_name=${txt(b.delivery_name)},
+      delivery_street=${txt(b.delivery_street)},
+      delivery_postal_code=${txt(b.delivery_postal_code)},
+      delivery_city=${txt(b.delivery_city)},
+      updated_at=now()
+    WHERE id=${id}`;
+
+  await sql`DELETE FROM document_items WHERE document_id=${id}`;
+  let n=1;
+  for(const x of items){
+    await sql`
+      INSERT INTO document_items(
+        document_id,position_no,category,description,quantity,unit,unit_price,vat_rate,line_total,source_type,sort_order
+      )
+      VALUES(
+        ${id},${String(n)},${txt(x.category)},${txt(x.description)},${num(x.quantity)},
+        ${txt(x.unit)},${num(x.unit_price)},
+        ${x.vat_rate===null||x.vat_rate===undefined||x.vat_rate===''?19:num(x.vat_rate)},
+        ${num(x.quantity)*num(x.unit_price)},${txt(x.source_type)||"catalog"},${n}
+      )`;
+    n++
+  }
+  return Response.json({ok:true})
+ }catch(e){return Response.json({error:e instanceof Error?e.message:"Dokument konnte nicht aktualisiert werden."},{status:500})}
+}

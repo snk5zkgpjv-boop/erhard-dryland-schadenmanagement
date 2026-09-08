@@ -1,33 +1,36 @@
-UPDATE v0.9.0 – QR/WARTUNG + EXCEL-ARTIKELIMPORT + DOKUMENTANSICHT
+UPDATE v0.9.1 – ORIGINALGETREUES DOKUMENTLAYOUT + LEISTUNGSZEITRAUM + LIEFERADRESSE
 
-Die Wartungs-Datenbank wurde bereits produktiv angelegt.
+Die Datenbankfelder wurden bereits produktiv angelegt:
+- service_period_from
+- service_period_to
+- delivery_name
+- delivery_street
+- delivery_postal_code
+- delivery_city
 
-ENTHALTEN:
-1. Geräte:
-   - Jedes physische Gerät erhält automatisch eine eindeutige Gerätekennung.
-   - Pro Einzelgerät wird ein eigener QR-Code erzeugt.
-   - QR führt auf die Geräteseite.
-   - Seriennummer, Inbetriebnahme und Wartungsintervall pflegbar.
-   - Wartungen mit Datum, Art, Ausführendem, Notiz, nächstem Termin und Kosten erfassbar.
-   - Wartungshistorie sichtbar.
-
-2. Artikelliste:
-   - Excel-Dateien .xlsx/.xls können direkt in der Artikelliste importiert werden.
-   - Aus "Gesamtkatalog (eigene)" werden eigene Leistungen übernommen.
-   - Aus "AXA-Leistungsverzeichnis" werden AXA-Positionen übernommen.
-   - Eigene Preise verwenden wie bisher den Preis-max-Wert.
-   - AXA verwendet bevorzugt die indexierte 2026-Spalte.
-   - Leckageortung aus deiner Excel wird übernommen.
-   - "Schadensbericht" wird zusätzlich als Standardleistung mit Preis 0,00 € angelegt, damit der Preis bewusst festgelegt werden kann.
-
-3. Angebot/Rechnung:
-   - Nach Speichern wird eine echte Dokumentansicht geöffnet.
-   - Briefkopf/Logo der gewählten Firma.
-   - Kunde/Adresse, Nummer, Datum, Positionen, Netto/USt./Gesamt.
-   - Bearbeiten und Drucken/PDF über Browser möglich.
+Neu:
+- Leistungszeitraum von/bis im Dokumenteditor.
+- Separate Liefer-/Leistungsadresse.
+- Bei Schadensfällen wird die Projektadresse automatisch vorgeschlagen.
+- Rechnungsanschrift/Auftraggeber bleibt separat.
+- Angebots- und Rechnungsansicht wurde stark an die hochgeladenen Erhard-Vorlagen angepasst:
+  * Logo oben rechts in Originalgröße
+  * Trennlinie
+  * Absenderzeile über dem Adressfeld
+  * Empfänger links
+  * Liefer-/Leistungsadresse und Datum rechts
+  * Rechnung mit Datum + Leistungszeitraum rechts
+  * Tabellenlayout mit grauem Kopf und Rahmen wie Original
+  * Summenblock
+  * Rechnungs-Zahlungstext
+  * Fußzeile mit Bank-/Steuer-/Kontaktdaten
+  * A4-Drucklayout
 
 UPLOAD:
-- Den kompletten Inhalt dieser ZIP in GitHub hochladen und vorhandene Dateien ersetzen.
-- package.json MUSS mit hochgeladen werden, da zwei neue Bibliotheken (xlsx und qrcode) benötigt werden.
-- CSS-ERGAENZUNG.txt NICHT als Programmdatei hochladen; die dortigen Regeln bitte ans Ende deiner bestehenden app/globals.css kopieren.
-- Danach Commit und Vercel-Build abwarten.
+1. ZIP entpacken.
+2. Alle enthaltenen Programmdateien in GitHub mit gleicher Ordnerstruktur hochladen und ersetzen.
+3. Commit changes.
+4. Vercel-Build abwarten.
+
+Wichtig:
+Die neue page.module.css muss mit hochgeladen werden. Dadurch ist das Dokumentlayout unabhängig von app/globals.css und sollte nicht wieder auf die riesige Logo-Darstellung zurückfallen.
