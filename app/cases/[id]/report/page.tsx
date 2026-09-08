@@ -5,7 +5,8 @@ const MEASUREMENT_TEXT=`Das kapazitive (auch dielektrische) Messverfahren, z. B.
 function Header({erhard}:{erhard:boolean}){return <div className="reportHead"><img src={erhard?"/erhard-logo.png":"/dryland-logo.png"} alt="Logo"/><div className="reportContact">{erhard?<><strong>Erhard Dienstleistungen</strong><br/>Böhmerwaldstr. 15<br/>73527 Hussenhofen<br/>Tel.: 07171 / 874 18 70<br/>Mobil: 0151 / 194 970 10</>:<><strong>Dryland Trocknungstechnik</strong><br/>Gutenbergstr. 76-80<br/>D-73525 Schwäbisch Gmünd<br/>info@dryland-trocknungstechnik.de</>}</div></div>}
 function Footer({page,total=4}:{page:number,total?:number}){return <div className="reportFoot">Seite {page}/{total}</div>}
 
-export default async function ReportPage({params}:{params:Promise<{id:string}>}){\n await requirePageUser();
+export default async function ReportPage({params}:{params:Promise<{id:string}>}){
+ await requirePageUser();
  const{id}=await params;const sql=getSql();
  const cases=await sql`SELECT c.*,co.code company_code,co.name company_name,co.street company_street,co.postal_code company_postal_code,co.city company_city,cu.first_name,cu.last_name,cu.company_name customer_company_name,cu.street customer_street,cu.postal_code customer_postal_code,cu.city customer_city FROM cases c JOIN companies co ON co.id=c.company_id LEFT JOIN customers cu ON cu.id=c.customer_id WHERE c.id=${id}`;
  if(!cases.length)return <main className="shell"><h1>Schaden nicht gefunden</h1></main>;
