@@ -21,15 +21,21 @@ export default async function ReportPage({params}:{params:Promise<{id:string}>})
  const dr=(reports[0]||{}) as any;
  const m=await sql`SELECT * FROM measurements WHERE case_id=${id} ORDER BY measured_at,created_at`;
  const p=await sql`SELECT * FROM photos WHERE case_id=${id} ORDER BY sort_order,created_at`;
- const objectPhoto=p.find((x:any)=>x.category==="objektbild");
- const measurementPhotos=p.filter((x:any)=>x.category==="messbild");
+ const objectPhoto=p.find((x:any)=>String(x.category||"").trim().toLowerCase()==="objektbild");
+ const measurementPhotos=p.filter((x:any)=>String(x.category||"").trim().toLowerCase()==="messbild");
  const damagePhotos=p.filter((x:any)=>x.category==="schadensbild"||x.category==="bauteiloeffnung");
+ const measurementPages=m.length?chunk(m,4):[[]];
  const photoPages=damagePhotos.length?chunk(damagePhotos,4):[[]];
- const totalPages=3+photoPages.length;
- const finalPage=3+photoPages.length;
+ const totalPages=2+measurementPages.length+photoPages.length;
+ const finalPage=2+measurementPages.length+photoPages.length;
  const customerName=c.customer_company_name||[c.first_name,c.last_name].filter(Boolean).join(" ")||"–";
  const reportDate=formatGermanDate(dr.report_date)||"–";
  const measurementDevices=Array.from(new Set(m.map((x:any)=>x.device).filter(Boolean))) as string[];
+ const hasT3000=m.some((x:any)=>String(x.device||"").toLowerCase().includes("t3000"));
+ const hasTS660=m.some((x:any)=>String(x.device||"").toLowerCase().includes("660")||String(x.method||"").toLowerCase().includes("kapazitiv"));
+ const hasResistance=m.some((x:any)=>String(x.method||"").toLowerCase().includes("widerstand")||String(x.device||"").toLowerCase().includes("widerstand"));
+ const hasCM=m.some((x:any)=>String(x.method||"").toLowerCase().includes("cm-"));
+ const hasThermo=m.some((x:any)=>String(x.method||"").toLowerCase().includes("thermograf"));
  return <main style={{background:"#eef2f5",padding:"12px 0"}}>
   <div className="noPrint shell actions"><PrintButton/><Link className="button secondary" href={`/cases/${id}/report/edit`}>Schadensbericht bearbeiten</Link><Link className="button secondary" href={`/cases/${id}`}>Zur Schadenakte</Link></div>
 
@@ -59,33 +65,52 @@ export default async function ReportPage({params}:{params:Promise<{id:string}>})
    <h2>2. Aufbau des Untersuchungsobjektes</h2>
    <div className="reportObjectGrid">
     <div><strong>Objektbaujahr</strong><br/>☐ unbekannt<br/>Baujahr: {dr.building_year||"–"}</div>
-    <div><strong>Objekt-Typ</strong><br/>☐ Einfamilienhaus<br/>☐ Mehrfamilienhaus<br/>☐ Gewerbe<br/>☐ Sonstiges<br/><br/><strong>Ausgewählt:</strong> {dr.building_type||"–"}</div>
-    <div><strong>Vorderansicht Objekt</strong>{objectPhoto?<img src={objectPhoto.file_url} alt="Vorderansicht Objekt"/>:<div style={{padding:"30px 0",textAlign:"center"}}>Kein Objektfoto hinterlegt</div>}</div>
+    <div><strong>Objekt-Typ</strong><br/>
+     {dr.building_type==="Einfamilienhaus"?"☒":"☐"} Einfamilienhaus<br/>
+     {dr.building_type==="Mehrfamilienhaus"?"☒":"☐"} Mehrfamilienhaus<br/>
+     {dr.building_type==="Gewerbe"?"☒":"☐"} Gewerbe<br/>
+     {dr.building_type==="Sonstiges"?"☒":"☐"} Sonstiges
+    </div>
+    <div><strong>Vorderansicht Objekt</strong>{objectPhoto?<><img src={objectPhoto.file_url} alt="Vorderansicht Objekt"/>{objectPhoto.caption?<div className="small" style={{marginTop:4}}>{objectPhoto.caption}</div>:null}</>:<div style={{padding:"30px 0",textAlign:"center"}}>Kein Objektfoto hinterlegt</div>}</div>
    </div>
    <Footer page={1} total={totalPages}/>
   </section>
 
-  <section className="reportSheet">
+  {measurementPages.map((pageMeasurements:any[],measurementPageIndex:number)=><section className="reportSheet" key={`measurement-page-${measurementPageIndex}`}>
    <Header erhard={erhard}/>
-   <h2>3. Messergebnisse</h2>
-   <table className="reportTable"><tbody><tr><th className="subhead">Messtechnik</th></tr><tr><td>
-    {measurementDevices.length?measurementDevices.map(d=><div key={d}>☒ {d}</div>):<><div>☐ Trotec T 3000</div><div>☐ Trotec T 660 SDI</div><div>☐ Trotec TS 016/300 Flach-Elektrodenpaar, isoliert</div></>}
-   </td></tr></tbody></table>
-   <p>Durch Anwendung anerkannter Messverfahren zur Feuchteermittlung (s. Pkt. 4) konnte in/an folgenden Räumlichkeiten/Stellen verstärkte Durchfeuchtung festgestellt werden:</p>
-   <p><strong>Messverfahren:</strong> {m[0]?.method||"Kapazitives Messverfahren"} (s. Pkt. 4)</p>
-   {m.length===0?<p>Keine Messwerte erfasst.</p>:m.map((x:any,i:number)=><div className="reportMeasurementGrid" key={x.id} style={{marginBottom:8}}>
-    <div><strong>Innenbereich</strong><br/>{x.room||"–"} {x.floor?"/ "+x.floor:""}</div>
-    <div><strong>Messstelle</strong><br/>☐ Wand ☐ Boden ☐ Decke<br/><br/>{x.component||"–"}<br/>{x.notes||""}</div>
-    <div><strong>[digits]</strong><br/>{x.value_numeric??"–"} {x.unit&&x.unit!=="digits"?x.unit:""}</div>
-    <div><strong>Messbilder</strong>{measurementPhotos[i]?<img src={measurementPhotos[i].file_url} alt="Messbild"/>:<div style={{padding:"20px 0"}}>–</div>}</div>
-   </div>)}
-   <h2>4. Beschreibung der Messdurchführung</h2>
-   <p>{MEASUREMENT_TEXT}</p>
-   <table className="digitTable"><thead><tr><th>Werteeinordnung</th><th>Digits</th></tr></thead><tbody>
-    <tr><td>trocken</td><td>&lt; 50</td></tr><tr><td>halb feucht</td><td>80</td></tr><tr><td>feucht</td><td>80 – 100</td></tr><tr><td>sehr feucht</td><td>100 – 120</td></tr><tr><td>nass</td><td>&gt;120</td></tr>
-   </tbody></table>
-   <Footer page={2} total={totalPages}/>
-  </section>
+   <h2>3. Messergebnisse{measurementPages.length>1?` – Seite ${measurementPageIndex+1}`:""}</h2>
+   {measurementPageIndex===0&&<>
+    <table className="reportTable"><tbody><tr><th className="subhead">Messtechnik</th></tr><tr><td>
+     <>
+      <div>{hasT3000||m.length>0?"☒":"☐"} Trotec T3000</div>
+      <div>{hasTS660?"☒":"☐"} Trotec TS 660 SDI – Messkugel / kapazitive Feuchtemessung</div>
+      <div>{hasResistance?"☒":"☐"} Widerstandsmessung – Trotec T3000 mit Widerstandselektroden</div>
+      <div>{hasCM?"☒":"☐"} CM-Messung</div>
+      <div>{hasThermo?"☒":"☐"} Thermografie</div>
+     </>
+    </td></tr></tbody></table>
+    <p>Durch Anwendung anerkannter Messverfahren zur Feuchteermittlung (s. Pkt. 4) konnte in/an folgenden Räumlichkeiten/Stellen verstärkte Durchfeuchtung festgestellt werden:</p>
+    <p><strong>Messverfahren:</strong> {Array.from(new Set(m.map((x:any)=>x.method).filter(Boolean))).join(", ")||"Kapazitives Messverfahren"} (s. Pkt. 4)</p>
+   </>}
+   {pageMeasurements.length===0?<p>Keine Messwerte erfasst.</p>:pageMeasurements.map((x:any,i:number)=>{
+    const absoluteIndex=measurementPageIndex*4+i;
+    const mp=measurementPhotos[absoluteIndex];
+    return <div className={mp?"reportMeasurementGrid":"reportMeasurementGrid compactMeasurement"} key={x.id} style={{marginBottom:8}}>
+     <div><strong>Innenbereich</strong><br/>{x.room||"–"} {x.floor?"/ "+x.floor:""}</div>
+     <div><strong>Messstelle</strong><br/>{x.component||"–"}<br/><span className="small">{x.notes||""}</span></div>
+     <div><strong>Messwert</strong><br/>{x.value_numeric??"–"} {x.unit||""}<br/><span className="small">{x.assessment||""}</span></div>
+     {mp?<div><strong>Messbild</strong><img src={mp.file_url} alt="Messbild"/></div>:null}
+    </div>
+   })}
+   {measurementPageIndex===measurementPages.length-1&&<>
+    <h2>4. Beschreibung der Messdurchführung</h2>
+    <p>{MEASUREMENT_TEXT}</p>
+    <table className="digitTable"><thead><tr><th>Werteeinordnung</th><th>Digits</th></tr></thead><tbody>
+     <tr><td>trocken</td><td>&lt; 50</td></tr><tr><td>halb feucht</td><td>80</td></tr><tr><td>feucht</td><td>80 – 100</td></tr><tr><td>sehr feucht</td><td>100 – 120</td></tr><tr><td>nass</td><td>&gt;120</td></tr>
+    </tbody></table>
+   </>}
+   <Footer page={2+measurementPageIndex} total={totalPages}/>
+  </section>)}
 
   {photoPages.map((pagePhotos:any[],pageIndex:number)=><section className="reportSheet" key={`damage-page-${pageIndex}`}>
    <Header erhard={erhard}/>
@@ -94,7 +119,7 @@ export default async function ReportPage({params}:{params:Promise<{id:string}>})
     <div><div style={{background:"#ddd",margin:"-5px -5px 5px",padding:"3px 5px"}}>Schadensort</div><strong>{x.room||"–"}</strong>{x.component?<><br/>{x.component}</>:null}<br/><br/>{x.caption||x.ai_description||"–"}</div>
     <div><div style={{background:"#ddd",margin:"-5px -5px 5px",padding:"3px 5px"}}>Bild {no}</div><img src={x.file_url} alt={`Schadensbild ${no}`}/></div>
    </div>})}
-   <Footer page={3+pageIndex} total={totalPages}/>
+   <Footer page={2+measurementPages.length+pageIndex} total={totalPages}/>
   </section>)}
 
   <section className="reportSheet">

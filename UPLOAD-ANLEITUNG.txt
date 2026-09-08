@@ -1,17 +1,21 @@
-UPDATE v0.8.3 – SCHADENSBERICHT, BILDER, AUFTRAGGEBER
+KORREKTUR v0.8.3.3 – TROTEC T3000 / MESSVERFAHREN
 
+Neu bei Messungen:
+- Standardgerät ist Trotec T3000.
+- Standardauswahl: Trotec T3000 + TS 660 SDI (Messkugel).
+- Weitere Auswahl: Trotec T3000 + Widerstandselektroden.
+- Messverfahren weiterhin auswählbar: kapazitiv, Widerstand, CM, Thermografie, Sonstiges.
+
+Im Schadensbericht unter "Messtechnik":
+- Trotec T3000 wird automatisch angekreuzt, sobald Messungen vorhanden sind.
+- TS 660 SDI / Messkugel wird angekreuzt, wenn kapazitiv gemessen wurde bzw. dieser Sensor gewählt wurde.
+- Widerstandsmessung wird angekreuzt, wenn sie bei einer Messung verwendet wurde.
+- CM-Messung und Thermografie werden ebenfalls automatisch entsprechend angekreuzt.
+- Es werden alle im Schaden verwendeten Messverfahren aufgeführt.
+
+Upload:
 1. ZIP entpacken.
-2. GitHub Repository öffnen.
-3. Add file -> Upload files.
-4. Den KOMPLETTEN Inhalt dieser ZIP hochladen und vorhandene Dateien ersetzen.
-5. Commit changes.
-6. Vercel Deployment abwarten.
-
-Neu:
-- Gespeichertes Berichtsdatum wird im Schadensbericht verwendet.
-- Alle Schadensbilder werden ausgegeben; bei vielen Bildern entstehen automatisch zusätzliche Berichtseiten.
-- Bericht hat dynamische Seitenzählung.
-- Schadensbericht kann über "Schadensbericht bearbeiten" direkt bearbeitet werden.
-- Auftraggeber hat eigene Anschrift, E-Mail und Telefon, unabhängig vom Schadensort.
-- Auftraggeber, Schadensort, Versicherungsdaten, Schadensursache und Beschreibung können nachträglich in der Schadenakte geändert werden.
-- Keine Datenbankmigration und keine neue Vercel-Variable nötig.
+2. Die zwei enthaltenen Dateien mit gleicher Ordnerstruktur bei GitHub hochladen.
+3. Vorhandene Dateien ersetzen.
+4. Commit changes.
+5. Vercel-Build abwarten.
