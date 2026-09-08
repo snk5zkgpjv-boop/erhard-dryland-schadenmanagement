@@ -1,5 +1,5 @@
 "use client";
-import {FormEvent,useEffect,useState} from "react";import {useRouter} from "next/navigation";
+import {FormEvent,useEffect,useState} from "react";import {useRouter} from "next/navigation";import {SelectOrCustom,STANDARD_FLOORS} from "@/components/RoomFields";
 type Company={id:string;code:string;name:string};
 export default function NewCaseForm(){
  const router=useRouter();const[companies,setCompanies]=useState<Company[]>([]);const[saving,setSaving]=useState(false);const[error,setError]=useState("");
@@ -12,7 +12,7 @@ export default function NewCaseForm(){
   <div className="field"><label>Kunde / Vorname</label><input name="customer_first_name"/></div><div className="field"><label>Kunde / Nachname</label><input name="customer_last_name"/></div>
   <div className="field full"><label>Firma / Hausverwaltung als Auftraggeber</label><input name="customer_company_name"/></div>
   <div className="field full"><label>Schadenort – Straße</label><input name="object_street"/></div><div className="field"><label>PLZ</label><input name="object_postal_code"/></div><div className="field"><label>Ort</label><input name="object_city"/></div>
-  <div className="field"><label>Etage</label><input name="floor" placeholder="z. B. 2. OG"/></div><div className="field"><label>Wohnung / Einheit</label><input name="unit"/></div>
+  <SelectOrCustom name="floor" items={STANDARD_FLOORS} label="Etage / Geschoss" placeholder="z. B. 7. OG"/><div className="field"><label>Wohnung / Einheit</label><input name="unit"/></div>
   <div className="field"><label>Versicherung</label><input name="insurer"/></div><div className="field"><label>Schadennummer</label><input name="claim_number"/></div>
   <div className="field"><label>Versicherungsnummer</label><input name="insurance_number"/></div><div className="field"><label>Referenznummer</label><input name="reference_number"/></div>
   <div className="field full"><label>Schadensursache</label><textarea name="damage_cause"/></div><div className="field full"><label>Erste Schadensbeschreibung</label><textarea name="damage_description"/></div>

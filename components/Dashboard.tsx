@@ -9,7 +9,7 @@ export default function Dashboard(){
   useEffect(()=>{load()},[]);
   const filtered=useMemo(()=>selectedCompany==="ALL"?cases:cases.filter(c=>c.company_code===selectedCompany),[cases,selectedCompany]);
   return <>
-    <section className="hero"><span className="pill">Version 0.2</span><h1>Schadenmanagement</h1><p className="muted">Gemeinsame digitale Schadenakte für Erhard Dienstleistungen und Dryland Trocknungstechnik.</p><div className="actions" style={{marginTop:14}}><Link className="button" href="/cases/new">+ Neuer Schaden</Link><button className="button secondary" onClick={load}>Aktualisieren</button></div></section>
+    <section className="hero"><span className="pill">Version 0.2</span><h1>Schadenmanagement</h1><p className="muted">Gemeinsame digitale Schadenakte für Erhard Dienstleistungen und Dryland Trocknungstechnik.</p><div className="actions" style={{marginTop:14}}><Link className="button" href="/cases/new">+ Neuer Schaden</Link><Link className="button secondary" href="/equipment">Geräteverwaltung</Link><button className="button secondary" onClick={load}>Aktualisieren</button></div></section>
     {error&&<div className="error">{error}</div>}
     <section className="grid cols2">
       <div className="card companyCard" onClick={()=>setSelectedCompany("ERHARD")}><span className="pill">ERHARD</span><div className="companyName">Erhard Dienstleistungen</div><p className="muted small">Sanierung, Wiederherstellung, Angebote und Rechnungen.</p></div>

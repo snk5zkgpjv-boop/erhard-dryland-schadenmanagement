@@ -1,0 +1,1 @@
+"use client";export default function PrintButton(){return <button className="button" onClick={()=>window.print()}>Drucken / als PDF sichern</button>}
