@@ -1,0 +1,3 @@
+"use client";
+import {useState} from "react";import {useRouter} from "next/navigation";
+export default function DeleteCaseButton({id}:{id:string}){const[busy,setBusy]=useState(false),router=useRouter();async function go(){if(!confirm("Diesen Schadensfall wirklich endgültig löschen? Zugehörige Messungen, Fotos, Rapporte, Trocknungen und Dokumente werden ebenfalls gelöscht."))return;setBusy(true);const r=await fetch(`/api/cases/${id}`,{method:"DELETE"});if(!r.ok){const j=await r.json().catch(()=>({}));alert(j.error||"Löschen fehlgeschlagen.");setBusy(false);return}router.push("/");router.refresh()}return <button type="button" className="button dangerButton" disabled={busy} onClick={go}>{busy?"Lösche …":"Schaden löschen"}</button>}

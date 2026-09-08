@@ -1,0 +1,2 @@
+import Link from "next/link";import DirectOrderForm from "@/components/DirectOrderForm";
+export default function DirectNew(){return <main className="shell"><div className="topbar"><Link className="back" href="/">← Zur Übersicht</Link></div><section className="hero"><span className="pill">Direkter Auftrag</span><h1>Angebot / Rechnung ohne Schaden</h1><p className="muted">Kundendaten erfassen und anschließend Leistungen aus der zentralen Artikelliste auswählen.</p></section><DirectOrderForm/></main>}

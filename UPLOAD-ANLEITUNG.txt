@@ -1,0 +1,23 @@
+UPDATE v0.8
+
+1. ZIP entpacken.
+2. GitHub-Repository öffnen.
+3. Add file -> Upload files.
+4. Den kompletten entpackten Inhalt in das Upload-Fenster ziehen.
+5. Commit changes.
+6. Vercel baut automatisch neu.
+
+Danach in Vercel einmalig:
+Settings -> Environment Variables -> Add
+Name: OPENAI_API_KEY
+Value: deinen OpenAI-API-Key
+Environments: Production, Preview, Development
+Speichern und anschließend Redeploy, falls Vercel nicht automatisch neu deployt.
+
+Optional:
+OPENAI_MODEL = gpt-5.6-luna
+
+DATABASE_URL nicht ändern.
+
+Die zentrale Artikelliste ist bereits aus der hochgeladenen Excel-Datei in die App übernommen.
+Es ist keine SQL-Migration nötig.

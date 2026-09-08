@@ -31,3 +31,26 @@
 }
 
 .docPage{background:#fff;color:#111;min-height:100vh}.docHeader{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;border-bottom:1.5px solid #1d78b5;padding-bottom:14px;margin-bottom:24px}.docHeader.erhard{border-bottom:2px solid #111}.docLogo{max-width:330px;max-height:105px;object-fit:contain}.docContact{text-align:right;font-size:12px;line-height:1.45}.docFooter{border-top:1.5px solid #1d78b5;margin-top:28px;padding-top:10px;font-size:11px}.docFooter.erhard{border-top:2px solid #111;display:grid;grid-template-columns:1fr 1fr;gap:20px}.docFooter.erhard .right{text-align:right}.docBody{padding:0 10px}.equipmentList{display:grid;gap:8px}.checkRow{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px}.checkRow input{width:auto;margin-top:2px}.selectWithCustom{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media(max-width:700px){.selectWithCustom{grid-template-columns:1fr}.docHeader{flex-direction:column}.docContact{text-align:left}.docLogo{max-width:280px}.docFooter.erhard{grid-template-columns:1fr}.docFooter.erhard .right{text-align:left}}@media print{@page{size:A4;margin:20mm 15mm 22mm 15mm}.docPage{font-size:10pt}.docHeader{position:fixed;top:-13mm;left:0;right:0;background:#fff;margin:0}.docFooter{position:fixed;bottom:-16mm;left:0;right:0;background:#fff;margin:0}.docBody{padding-top:30mm;padding-bottom:18mm}.docLogo{max-height:24mm;max-width:85mm}.docContact{font-size:8.5pt}.simpleTable{font-size:8.5pt}.photoCard{break-inside:avoid}}
+
+.reportSheet{background:#fff;width:210mm;min-height:297mm;margin:0 auto 18px;padding:14mm 18mm 15mm;position:relative;box-shadow:0 2px 12px rgba(0,0,0,.08);font-size:12px;line-height:1.25}
+.reportSheet h1{font-size:16px;margin:12px 0}.reportSheet h2{font-size:14px;text-decoration:underline;margin:14px 0 8px}.reportSheet h3{font-size:12px;margin:10px 0 5px}
+.reportHead{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid #72a8c8;padding-bottom:8px;margin-bottom:16px}
+.reportHead img{width:75mm;max-height:28mm;object-fit:contain;object-position:left top}
+.reportContact{text-align:right;font-size:10px;line-height:1.35}
+.reportFoot{position:absolute;bottom:7mm;left:18mm;right:18mm;border-top:1px solid #72a8c8;padding-top:3px;font-size:10px}
+.reportTable{width:100%;border-collapse:collapse}.reportTable th,.reportTable td{border:1px solid #222;padding:4px 6px;vertical-align:top}.reportTable th{background:#ddd;font-weight:700}.reportTable .subhead{text-align:center;background:#d4d4d4;font-weight:700}
+.reportObjectGrid{display:grid;grid-template-columns:1fr 1fr 1.6fr;border:1px solid #222}.reportObjectGrid>div{padding:5px;border-right:1px solid #222}.reportObjectGrid>div:last-child{border-right:0}.reportObjectGrid img{width:100%;height:58mm;object-fit:cover}
+.reportMeasurementGrid{display:grid;grid-template-columns:1.1fr 1.8fr .55fr 1.8fr;border:1px solid #222}.reportMeasurementGrid>div{padding:4px;border-right:1px solid #222}.reportMeasurementGrid>div:last-child{border-right:0}.reportMeasurementGrid img{width:100%;height:55mm;object-fit:cover}
+.reportPhotoRow{display:grid;grid-template-columns:1fr 1.15fr;border:1px solid #222;margin-bottom:8px}.reportPhotoRow>div{padding:5px}.reportPhotoRow>div:first-child{border-right:1px solid #222}.reportPhotoRow img{width:100%;height:60mm;object-fit:cover}
+.preline{white-space:pre-line}
+.digitTable{width:94%;border-collapse:collapse;margin-top:7px}.digitTable td,.digitTable th{border:1px solid #222;padding:2px 6px}.digitTable th{text-align:left;background:#eee}
+@media(max-width:900px){.reportSheet{width:100%;min-height:auto;padding:14px;box-shadow:none}.reportObjectGrid,.reportMeasurementGrid,.reportPhotoRow{grid-template-columns:1fr}.reportHead{flex-direction:column}.reportContact{text-align:left}.reportFoot{position:static;margin-top:18px}.reportObjectGrid>div,.reportMeasurementGrid>div,.reportPhotoRow>div:first-child{border-right:0;border-bottom:1px solid #222}}
+@media print{
+ @page{size:A4;margin:0}
+ body{background:#fff}
+ .reportSheet{width:210mm;height:297mm;min-height:297mm;margin:0;padding:14mm 18mm 15mm;box-shadow:none;page-break-after:always;overflow:hidden}
+ .reportSheet:last-child{page-break-after:auto}
+ .reportFoot{position:absolute;bottom:7mm}
+}
+
+.dangerButton{background:#b42318;color:#fff}.aiBadge{display:inline-block;font-size:11px;font-weight:800;padding:4px 7px;border-radius:999px;background:#efe9ff;color:#53389e}
