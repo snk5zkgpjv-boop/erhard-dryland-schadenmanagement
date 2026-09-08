@@ -94,7 +94,7 @@ export default async function ReportPage({params}:{params:Promise<{id:string}>})
    </>}
    {pageMeasurements.length===0?<p>Keine Messwerte erfasst.</p>:pageMeasurements.map((x:any,i:number)=>{
     const absoluteIndex=measurementPageIndex*4+i;
-    const mp=measurementPhotos[absoluteIndex];
+    const mp=x.photo_id?p.find((ph:any)=>ph.id===x.photo_id):measurementPhotos[absoluteIndex];
     return <div className={mp?"reportMeasurementGrid":"reportMeasurementGrid compactMeasurement"} key={x.id} style={{marginBottom:8}}>
      <div><strong>Innenbereich</strong><br/>{x.room||"–"} {x.floor?"/ "+x.floor:""}</div>
      <div><strong>Messstelle</strong><br/>{x.component||"–"}<br/><span className="small">{x.notes||""}</span></div>

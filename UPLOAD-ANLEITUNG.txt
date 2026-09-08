@@ -1,22 +1,21 @@
-UPDATE v0.8.5 – GEMEINSAMER GERÄTEKATALOG + FIRMENZUGRIFF
+UPDATE v0.8.6 – MESSUNGEN & TROCKNUNGEN BEARBEITEN/LÖSCHEN + MESSFOTOS
 
-Die Datenbankänderung app_user_companies wurde bereits produktiv eingespielt.
-Robert ist bereits ERHARD und DRYLAND zugeordnet.
+Neu:
+- Messungen können nachträglich bearbeitet werden.
+- Messungen können gelöscht werden.
+- Bei neuen Messungen kann direkt ein Messfoto hochgeladen werden.
+- Bei bestehenden Messungen kann ein Messfoto ergänzt/ersetzt werden.
+- Verknüpfte Messfotos werden im Messverlauf als Vorschau angezeigt.
+- Der Schadensbericht bevorzugt das direkt mit der Messung verknüpfte Messfoto.
+- Bereits angelegte Trocknungen/Geräte können bearbeitet werden.
+- Bereits angelegte Trocknungen/Geräte können gelöscht werden.
+- Raum, Gerät, Verfahren, Aufstellzeit, Abbauzeit und Hinweise lassen sich ändern.
 
-Wichtig:
-- Gerätekatalog ist für beide Firmen gemeinsam.
-- Erhard- und Dryland-Schäden bleiben getrennt.
-- Benutzer sehen nur Schäden ihrer zugeordneten Firma/Firmen.
-- Direkte URLs zu fremden Schäden werden serverseitig blockiert.
-- Admin kann Benutzer einer oder beiden Firmen zuordnen.
-
-UPLOAD:
+Upload:
 1. ZIP entpacken.
-2. Alle enthaltenen Dateien mit gleicher Ordnerstruktur zu GitHub hochladen.
-3. Vorhandene Dateien ersetzen.
-4. Commit changes.
-5. Vercel-Build abwarten.
+2. Die vier Programmdateien mit gleicher Ordnerstruktur in GitHub hochladen und ersetzen.
+3. Commit changes.
+4. Vercel-Build abwarten.
 
-Hinweis zu app/globals.css:
-Diese Datei enthält NUR die neuen Zusatzregeln. NICHT als alleinigen Ersatz der bisherigen globals.css verwenden.
-Die Regeln müssen ans Ende der bestehenden globals.css angehängt werden.
+STYLE-ERGÄNZUNG.txt ist optional und muss nicht hochgeladen werden.
+Für die Bestandsanzahl der Gerätemodelle (z. B. TTK 125 = 10 Stück) ist weiterhin die separat vorbereitete Datenbankerweiterung erforderlich.
