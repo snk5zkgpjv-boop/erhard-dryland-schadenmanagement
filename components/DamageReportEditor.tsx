@@ -1,13 +1,13 @@
 "use client";
-import {FormEvent,useEffect,useState} from "react";
+import {FormEvent,useEffect,useState} from "react";import Link from "next/link";
 export default function DamageReportEditor({caseId}:{caseId:string}){
- const[data,setData]=useState<any>(null),[msg,setMsg]=useState(""),[err,setErr]=useState("");
- useEffect(()=>{fetch(`/api/cases/${caseId}/damage-report`,{cache:"no-store"}).then(r=>r.json()).then(setData).catch(()=>setErr("Berichtsdaten konnten nicht geladen werden."))},[caseId]);
- async function save(e:FormEvent<HTMLFormElement>){e.preventDefault();setMsg("");setErr("");const b=Object.fromEntries(new FormData(e.currentTarget).entries());const r=await fetch(`/api/cases/${caseId}/damage-report`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)});const j=await r.json();if(!r.ok){setErr(j.error||"Speichern fehlgeschlagen.");return}setMsg("Berichtsdaten gespeichert.")}
+ const[data,setData]=useState<any>(null),[msg,setMsg]=useState(""),[err,setErr]=useState(""),[saving,setSaving]=useState(false);
+ async function load(){const r=await fetch(`/api/cases/${caseId}/damage-report`,{cache:"no-store"});const j=await r.json();if(!r.ok)throw new Error(j.error||"Berichtsdaten konnten nicht geladen werden.");setData(j)}
+ useEffect(()=>{load().catch(e=>setErr(e instanceof Error?e.message:"Berichtsdaten konnten nicht geladen werden."))},[caseId]);
+ async function save(e:FormEvent<HTMLFormElement>){e.preventDefault();setMsg("");setErr("");setSaving(true);try{const b=Object.fromEntries(new FormData(e.currentTarget).entries());const r=await fetch(`/api/cases/${caseId}/damage-report`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)});const j=await r.json();if(!r.ok)throw new Error(j.error||"Speichern fehlgeschlagen.");await load();setMsg("Berichtsdaten gespeichert. Der geöffnete Schadensbericht verwendet jetzt diese Angaben.")}catch(e){setErr(e instanceof Error?e.message:"Speichern fehlgeschlagen.")}finally{setSaving(false)}}
  if(!data)return <div className="card empty">Lade Berichtsdaten …</div>;
- return <form className="card" onSubmit={save}>
-  <h2>Berichtsdaten</h2>
-  <p className="muted small">Diese Angaben steuern den vierseitigen Schadensbericht nach deinem Dryland-Muster.</p>
+ return <form id="berichtsdaten" className="card" onSubmit={save}>
+  <div className="sectionHeader"><div><h2>Schadensbericht bearbeiten</h2><p className="muted small">Diese Angaben steuern den Schadensbericht. Änderungen können jederzeit gespeichert und anschließend im Bericht geprüft werden.</p></div><Link className="button secondary" href={`/cases/${caseId}/report`}>Bericht ansehen</Link></div>
   {msg&&<div className="notice">{msg}</div>}{err&&<div className="error">{err}</div>}
   <div className="formGrid" style={{marginTop:12}}>
    <div className="field"><label>Berichtsdatum</label><input type="date" name="report_date" defaultValue={String(data.report_date||"").slice(0,10)}/></div>
@@ -20,6 +20,6 @@ export default function DamageReportEditor({caseId}:{caseId:string}){
    <div className="field full"><label>Weitere Vorgehensweise</label><textarea style={{minHeight:260}} name="further_action" defaultValue={data.further_action||""}/></div>
    <div className="field full"><label>Wichtiger Hinweis / Haftungsausschluss</label><textarea style={{minHeight:220}} name="disclaimer_text" defaultValue={data.disclaimer_text||""}/></div>
   </div>
-  <button className="button success" style={{marginTop:14}}>Berichtsdaten speichern</button>
+  <div className="actions" style={{marginTop:14}}><button className="button success" disabled={saving}>{saving?"Speichere …":"Berichtsdaten speichern"}</button><Link className="button secondary" href={`/cases/${caseId}/report`}>Schadensbericht öffnen</Link></div>
  </form>
 }

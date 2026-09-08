@@ -9,9 +9,16 @@ export default function NewCaseForm(){
   <div className="field"><label>Ausführende Firma *</label><select name="company_id" required defaultValue=""><option value="" disabled>Firma auswählen</option>{companies.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></div>
   <div className="field"><label>Vorgangs-/Projektnummer</label><input name="case_number" placeholder="z. B. 2026-0041"/></div>
   <div className="field full"><label>Bezeichnung des Schadens *</label><input name="title" required placeholder="z. B. Wasserschaden Badezimmer – Müller"/></div>
-  <div className="field"><label>Kunde / Vorname</label><input name="customer_first_name"/></div><div className="field"><label>Kunde / Nachname</label><input name="customer_last_name"/></div>
-  <div className="field full"><label>Firma / Hausverwaltung als Auftraggeber</label><input name="customer_company_name"/></div>
-  <div className="field full"><label>Schadenort – Straße</label><input name="object_street"/></div><div className="field"><label>PLZ</label><input name="object_postal_code"/></div><div className="field"><label>Ort</label><input name="object_city"/></div>
+
+  <div className="field full"><h3 style={{margin:"8px 0 0"}}>Auftraggeber / Kunde</h3><p className="muted small" style={{margin:"4px 0 0"}}>Diese Anschrift kann vom Schadensort abweichen und wird im Schadensbericht als Auftraggeber ausgegeben.</p></div>
+  <div className="field"><label>Vorname</label><input name="customer_first_name"/></div><div className="field"><label>Nachname</label><input name="customer_last_name"/></div>
+  <div className="field full"><label>Firma / Hausverwaltung</label><input name="customer_company_name"/></div>
+  <div className="field full"><label>Auftraggeber – Straße / Hausnummer</label><input name="customer_street"/></div>
+  <div className="field"><label>Auftraggeber – PLZ</label><input name="customer_postal_code"/></div><div className="field"><label>Auftraggeber – Ort</label><input name="customer_city"/></div>
+  <div className="field"><label>E-Mail</label><input type="email" name="customer_email"/></div><div className="field"><label>Telefon</label><input name="customer_phone"/></div>
+
+  <div className="field full"><h3 style={{margin:"12px 0 0"}}>Schadensort / Messort</h3></div>
+  <div className="field full"><label>Schadensort – Straße / Hausnummer</label><input name="object_street"/></div><div className="field"><label>Schadensort – PLZ</label><input name="object_postal_code"/></div><div className="field"><label>Schadensort – Ort</label><input name="object_city"/></div>
   <SelectOrCustom name="floor" items={STANDARD_FLOORS} label="Etage / Geschoss" placeholder="z. B. 7. OG"/><div className="field"><label>Wohnung / Einheit</label><input name="unit"/></div>
   <div className="field"><label>Versicherung</label><input name="insurer"/></div><div className="field"><label>Schadennummer</label><input name="claim_number"/></div>
   <div className="field"><label>Versicherungsnummer</label><input name="insurance_number"/></div><div className="field"><label>Referenznummer</label><input name="reference_number"/></div>

@@ -66,3 +66,5 @@
 .userRow select{margin:0}.toggleLabel{display:flex;align-items:center;gap:6px;white-space:nowrap}.toggleLabel input{width:auto}
 input[type=file]{background:#fff}
 @media(max-width:700px){.userRow{grid-template-columns:1fr}.userRow select{width:100%}}
+
+.sectionHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.sectionHeader h2{margin-top:0}@media(max-width:700px){.sectionHeader{flex-direction:column}}
