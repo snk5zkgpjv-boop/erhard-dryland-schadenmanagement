@@ -1,29 +1,28 @@
-v0.9.8.4 – SCHADENSBILDER DIREKT IM SCHADENSBERICHT BEARBEITEN
+v0.9.8.5 – BEARBEITEN-BUTTON IM NORMALEN FOTO-REITER
 
-Prüfung:
-Die Version v0.9.8.3 ist tatsächlich auf Vercel deployed und READY.
-Die dort eingebauten Bearbeiten-Schaltflächen wurden jedoch nur dynamisch
-im normalen Reiter „Fotos“ der Schadenakte ergänzt.
-
-Wenn man über „Schadensbericht bearbeiten“ arbeitet, gab es deshalb dort
-keine sichtbaren Bearbeiten-Schaltflächen für Schadensbilder.
+Prüfergebnis:
+- Die aktuelle Vercel-Version ist erfolgreich deployed und READY.
+- CasePhotoEditEnhancer ist in app/layout.tsx geladen.
+- Die Fotos-API liefert 200.
+- Im normalen Reiter „Fotos“ sind die Foto-Karten korrekt als .photoCard/.photoBody vorhanden.
+- Der bisherige dynamische Zuordnungsmechanismus war trotzdem zu empfindlich und konnte
+  die Karte nicht zuverlässig dem Datensatz zuordnen. Dann wurden gar keine Buttons eingefügt.
 
 Fix:
-- Im Bereich „Schadensbericht & Stammdaten“ gibt es jetzt einen eigenen
-  Abschnitt „Schadensbilder bearbeiten“.
-- Jedes Schadensbild zeigt direkt:
-  Bearbeiten
-  Entfernen
-- Bearbeitbar:
-  Kategorie
-  Raum
-  Bauteil
-  Beschreibung
-  Bild ersetzen
-- Objektbilder und Bauteilöffnungen sind ebenfalls enthalten.
-- Messbilder werden darunter ebenfalls angezeigt und können bearbeitet/entfernt werden.
-- Entfernt man ein Messbild, bleibt die Messung erhalten.
-- Gute mobile Darstellung mit großen Schaltflächen.
+- Zuordnung zuerst über normalisierte Bild-URL.
+- Falls die URL abweicht: sichere Zuordnung über die Kartenreihenfolge.
+- Buttons werden auch nach Tabwechsel erneut eingeblendet.
+- Zusätzlicher Wiederholungscheck verhindert, dass sie nach React-Render verschwinden.
+- Direkt in JEDEM Bild im normalen Reiter „Fotos“:
+    Bearbeiten
+    Entfernen
+- Bearbeiten öffnet:
+    Kategorie
+    Raum
+    Bauteil
+    Beschreibung
+    Bild ersetzen
+- Buttons werden ausdrücklich sichtbar/aktiv gestylt.
 
-Keine Datenbankmigration erforderlich.
-Baut auf v0.9.8.3 auf.
+Keine Datenbankmigration.
+Baut auf v0.9.8.4 auf.

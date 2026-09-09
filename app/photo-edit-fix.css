@@ -1,10 +1,26 @@
-.photoActionRow{margin-top:9px;display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.photoActionRow .button{width:100%}
+.photoActionRow{
+ display:grid!important;
+ grid-template-columns:1fr 1fr;
+ gap:7px;
+ margin-top:10px;
+ padding-top:8px;
+ border-top:1px solid #e1e5e8;
+}
+.photoActionRow .button{
+ display:inline-flex!important;
+ visibility:visible!important;
+ opacity:1!important;
+ width:100%;
+ min-height:36px;
+ align-items:center;
+ justify-content:center;
+}
 .photoEditBackdrop{position:fixed;inset:0;z-index:1000;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;padding:16px}
 .photoEditModal{width:min(720px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:16px;padding:16px;box-shadow:0 18px 55px rgba(0,0,0,.28)}
 .photoEditPreview{display:block;width:100%;max-height:300px;object-fit:contain;background:#f5f6f7;border-radius:10px;margin:10px 0 14px}
 @media(max-width:700px){
  .photoActionRow{grid-template-columns:1fr}
+ .photoActionRow .button{min-height:44px}
  .photoEditBackdrop{align-items:flex-end;padding:0}
  .photoEditModal{width:100%;max-height:94vh;border-radius:16px 16px 0 0;padding:14px}
  .photoEditPreview{max-height:220px}
