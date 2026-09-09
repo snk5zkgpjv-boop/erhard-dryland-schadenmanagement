@@ -1,5 +1,6 @@
 import "./globals.css";
 import "./ui-polish.css";
+import "./report-print-fix.css";
 import type { Metadata } from "next";
 export const metadata: Metadata = {
   title:"Erhard & Dryland Schadenmanagement",

@@ -1,15 +1,25 @@
-v0.9.7.1 – BENUTZERNAME / AUTOFILL-FIX
+v0.9.8.1 – MOBILE PDF / SCHADENSBERICHT-DRUCKFIX
 
-Behoben:
-- Benutzername beim Anlegen eines neuen Benutzers ist frei editierbar.
-- Das Formular startet mit leeren Feldern.
-- Browser-/Passwortmanager-Autofill wird für Benutzername, Anzeigename und E-Mail unterdrückt.
-- Startpasswort ist als neues Passwort markiert.
-- Nach dem Speichern werden die Eingabefelder zuverlässig geleert.
+Problem:
+Beim Speichern des Schadensberichts als PDF auf dem Handy wurden die eigentlich
+7 vorgesehenen Berichtseiten nochmals vom mobilen Browser umgebrochen.
+Dadurch entstanden z. B. 14 Seiten, davon mehrere fast leer.
 
-Ursache:
-Im App-Code war kein fester Benutzername „Robert“ hinterlegt. Der Wert wurde sehr wahrscheinlich vom Browser bzw. Passwortmanager aus gespeicherten Zugangsdaten in das Formular eingesetzt. Das neue kontrollierte Eingabefeld verhindert, dass dieser Wert im Formular festhängt.
+Fix:
+- Druck verwendet immer das A4-/Desktop-Raster.
+- 1 reportSheet = exakt 1 A4-Seite.
+- Mess-, Objekt- und Schadensbild-Raster werden beim Drucken nicht mehr mobil gestapelt.
+- Fußzeile bleibt an der vorgesehenen Position.
+- Bilder behalten die definierten A4-Höhen.
+- Keine zusätzlichen leeren Fortsetzungsseiten durch das responsive Handy-Layout.
 
-UPLOAD:
-ZIP entpacken und komplett mit gleicher Ordnerstruktur in GitHub hochladen/ersetzen.
-Danach Commit und Vercel-Build abwarten.
+Dateien:
+app/layout.tsx
+app/report-print-fix.css
+
+Keine Datenbankmigration erforderlich.
+
+Hinweis:
+Die vom iPhone/Safari selbst eingeblendete URL/Datum-Seiteninformation kann je nach
+iOS-Druckdialog weiterhin vom Browser stammen. Die App-eigene Seitennummerierung
+bleibt davon unabhängig.
