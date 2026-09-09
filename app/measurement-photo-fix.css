@@ -1,0 +1,18 @@
+.photoDeleteButton{margin-top:9px;width:100%}
+.measurementCurrentPhoto{margin:10px 0;padding:10px;border:1px solid #e5b8b2;border-radius:10px;background:#fff7f6}
+.measurementCurrentPhoto img{display:block;width:100%;max-width:260px;max-height:180px;object-fit:cover;border-radius:8px;margin:7px 0}
+
+@media(max-width:700px){
+  /* Messverlauf auf dem Handy nicht mehr als breite, seitlich versteckte Tabelle. */
+  .tableWrap{overflow:visible}
+  .simpleTable thead{display:none}
+  .simpleTable,.simpleTable tbody,.simpleTable tr,.simpleTable td{display:block;width:100%}
+  .simpleTable tr{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;padding:10px;background:#fff}
+  .simpleTable td{border:0!important;padding:5px 0!important}
+  .simpleTable td:last-child{padding-top:9px!important;border-top:1px solid var(--line)!important;margin-top:5px}
+  .simpleTable td:last-child .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .simpleTable td:last-child .button{width:100%;min-height:42px}
+  .miniPhoto{width:120px!important;height:80px!important;object-fit:cover;border-radius:8px}
+  .editPanel{position:relative;border:2px solid #b8d4e8;border-radius:12px;padding:12px;margin-bottom:14px;background:#fafdff}
+  .editPanel .actions .button{min-height:44px}
+}

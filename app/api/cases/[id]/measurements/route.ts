@@ -32,16 +32,28 @@ export async function PATCH(r:Request,{params}:{params:Promise<{id:string}>}){
     const{id}=await params;const b=await r.json();const measurementId=txt(b.measurement_id);
     if(!measurementId)return Response.json({error:"Messungs-ID fehlt."},{status:400});
     const sql=getSql();
+
+    const current=await sql`SELECT photo_id FROM measurements WHERE id=${measurementId} AND case_id=${id} LIMIT 1`;
+    if(!current.length)return Response.json({error:"Messung nicht gefunden."},{status:404});
+
+    let photoId:any=current[0].photo_id||null;
+    if(b.remove_photo===true){
+      if(photoId)await sql`DELETE FROM photos WHERE id=${photoId} AND case_id=${id}`;
+      photoId=null;
+    }else if(txt(b.photo_id)){
+      const old=photoId;
+      photoId=txt(b.photo_id);
+      if(old&&String(old)!==String(photoId))await sql`DELETE FROM photos WHERE id=${old} AND case_id=${id}`;
+    }
+
     const rows=await sql`
       UPDATE measurements SET
         measured_at=COALESCE(${txt(b.measured_at)}::timestamptz,measured_at),
         room=${txt(b.room)},floor=${txt(b.floor)},component=${txt(b.component)},method=${txt(b.method)},device=${txt(b.device)},
         value_numeric=${num(b.value_numeric)},unit=${txt(b.unit)},reference_value=${num(b.reference_value)},
-        assessment=${txt(b.assessment)},notes=${txt(b.notes)},
-        photo_id=COALESCE(${txt(b.photo_id)},photo_id)
+        assessment=${txt(b.assessment)},notes=${txt(b.notes)},photo_id=${photoId}
       WHERE id=${measurementId} AND case_id=${id}
       RETURNING id`;
-    if(!rows.length)return Response.json({error:"Messung nicht gefunden."},{status:404});
     return Response.json({ok:true})
   }catch(e){return Response.json({error:e instanceof Error?e.message:"Messung konnte nicht geändert werden."},{status:500})}
 }

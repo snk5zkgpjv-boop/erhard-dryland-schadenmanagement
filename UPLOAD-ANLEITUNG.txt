@@ -1,25 +1,21 @@
-v0.9.8.1 – MOBILE PDF / SCHADENSBERICHT-DRUCKFIX
+v0.9.8.2 – MESSUNGEN BEARBEITEN + FOTOS ENTFERNEN
 
-Problem:
-Beim Speichern des Schadensberichts als PDF auf dem Handy wurden die eigentlich
-7 vorgesehenen Berichtseiten nochmals vom mobilen Browser umgebrochen.
-Dadurch entstanden z. B. 14 Seiten, davon mehrere fast leer.
+Behoben / verbessert:
+- Messungen sind auf dem Handy im Messverlauf jetzt als übersichtliche Karten statt als zu breite Tabelle dargestellt.
+- Die Schaltflächen „Bearbeiten“ und „Löschen“ bleiben dadurch auf dem Handy sichtbar.
+- Beim Klick auf „Bearbeiten“ scrollt die Ansicht automatisch zur Bearbeitungsmaske.
+- Alle Messwerte können weiterhin geändert werden: Raum, Etage, Bauteil, Messverfahren, Gerät, Messwert, Einheit, Bewertung und Anmerkung.
+- Ein vorhandenes Messfoto kann in der Bearbeitungsmaske separat entfernt werden.
+- Die Messung selbst bleibt beim Entfernen des Messfotos bestehen.
+- Ein Messfoto kann weiterhin durch ein neues Foto ersetzt werden; das alte Foto wird dabei gelöscht.
+- Im allgemeinen Reiter „Fotos“ erhält jedes gespeicherte Foto eine Schaltfläche „Foto entfernen“.
+- Beim Entfernen eines Fotos, das an einer Messung hängt, wird nur die Foto-Verknüpfung aus der Messung entfernt – die Messung bleibt erhalten.
+- Vor jedem Löschen erfolgt eine Sicherheitsabfrage.
 
-Fix:
-- Druck verwendet immer das A4-/Desktop-Raster.
-- 1 reportSheet = exakt 1 A4-Seite.
-- Mess-, Objekt- und Schadensbild-Raster werden beim Drucken nicht mehr mobil gestapelt.
-- Fußzeile bleibt an der vorgesehenen Position.
-- Bilder behalten die definierten A4-Höhen.
-- Keine zusätzlichen leeren Fortsetzungsseiten durch das responsive Handy-Layout.
+Technisch:
+- DELETE für /api/cases/[id]/photos ergänzt.
+- Measurement-PATCH kann Foto entfernen/ersetzen.
+- Mobile Darstellung des Messverlaufs verbessert.
+- Keine Datenbankmigration erforderlich.
 
-Dateien:
-app/layout.tsx
-app/report-print-fix.css
-
-Keine Datenbankmigration erforderlich.
-
-Hinweis:
-Die vom iPhone/Safari selbst eingeblendete URL/Datum-Seiteninformation kann je nach
-iOS-Druckdialog weiterhin vom Browser stammen. Die App-eigene Seitennummerierung
-bleibt davon unabhängig.
+Dieses Paket baut auf v0.9.8.1 auf.
