@@ -1,21 +1,27 @@
-v0.9.8.2 – MESSUNGEN BEARBEITEN + FOTOS ENTFERNEN
+v0.9.8.3 – SCHADENSBILDER BEARBEITEN / ENTFERNEN
 
-Behoben / verbessert:
-- Messungen sind auf dem Handy im Messverlauf jetzt als übersichtliche Karten statt als zu breite Tabelle dargestellt.
-- Die Schaltflächen „Bearbeiten“ und „Löschen“ bleiben dadurch auf dem Handy sichtbar.
-- Beim Klick auf „Bearbeiten“ scrollt die Ansicht automatisch zur Bearbeitungsmaske.
-- Alle Messwerte können weiterhin geändert werden: Raum, Etage, Bauteil, Messverfahren, Gerät, Messwert, Einheit, Bewertung und Anmerkung.
-- Ein vorhandenes Messfoto kann in der Bearbeitungsmaske separat entfernt werden.
-- Die Messung selbst bleibt beim Entfernen des Messfotos bestehen.
-- Ein Messfoto kann weiterhin durch ein neues Foto ersetzt werden; das alte Foto wird dabei gelöscht.
-- Im allgemeinen Reiter „Fotos“ erhält jedes gespeicherte Foto eine Schaltfläche „Foto entfernen“.
-- Beim Entfernen eines Fotos, das an einer Messung hängt, wird nur die Foto-Verknüpfung aus der Messung entfernt – die Messung bleibt erhalten.
-- Vor jedem Löschen erfolgt eine Sicherheitsabfrage.
+Neu bei allen Fotos im Reiter „Fotos“:
+- Schaltfläche „Foto bearbeiten“
+- Schaltfläche „Foto entfernen“
+- Sicherheitsabfrage vor dem Löschen
 
-Technisch:
-- DELETE für /api/cases/[id]/photos ergänzt.
-- Measurement-PATCH kann Foto entfernen/ersetzen.
-- Mobile Darstellung des Messverlaufs verbessert.
+Beim Bearbeiten eines Schadensbildes können geändert werden:
+- Kategorie
+- Raum
+- Bauteil
+- Beschreibung
+- Bild selbst ersetzen
+
+Unterstützte Kategorien:
+- Schadensbild
+- Messbild
+- Objektbild
+- Bauteilöffnung
+
+Wichtig:
+- Wird ein Bild ersetzt, bleiben Raum/Bauteil/Beschreibung erhalten.
+- Wird ein Foto gelöscht, das an einer Messung hängt, bleibt die Messung erhalten; nur die Foto-Verknüpfung wird entfernt.
+- Auf dem Handy öffnet sich der Bearbeitungsdialog als große, gut bedienbare Ansicht von unten.
 - Keine Datenbankmigration erforderlich.
 
-Dieses Paket baut auf v0.9.8.1 auf.
+Dieses Paket baut auf v0.9.8.2 auf.
