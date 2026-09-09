@@ -3,6 +3,7 @@ import "./ui-polish.css";
 import "./report-print-fix.css";
 import "./measurement-photo-fix.css";
 import "./photo-edit-fix.css";
+import "./report-photo-manager.css";
 import type { Metadata } from "next";
 import CaseMobileEditEnhancer from "@/components/CaseMobileEditEnhancer";
 import CasePhotoEditEnhancer from "@/components/CasePhotoEditEnhancer";

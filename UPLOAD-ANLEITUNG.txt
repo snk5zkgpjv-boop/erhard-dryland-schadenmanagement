@@ -1,27 +1,29 @@
-v0.9.8.3 – SCHADENSBILDER BEARBEITEN / ENTFERNEN
+v0.9.8.4 – SCHADENSBILDER DIREKT IM SCHADENSBERICHT BEARBEITEN
 
-Neu bei allen Fotos im Reiter „Fotos“:
-- Schaltfläche „Foto bearbeiten“
-- Schaltfläche „Foto entfernen“
-- Sicherheitsabfrage vor dem Löschen
+Prüfung:
+Die Version v0.9.8.3 ist tatsächlich auf Vercel deployed und READY.
+Die dort eingebauten Bearbeiten-Schaltflächen wurden jedoch nur dynamisch
+im normalen Reiter „Fotos“ der Schadenakte ergänzt.
 
-Beim Bearbeiten eines Schadensbildes können geändert werden:
-- Kategorie
-- Raum
-- Bauteil
-- Beschreibung
-- Bild selbst ersetzen
+Wenn man über „Schadensbericht bearbeiten“ arbeitet, gab es deshalb dort
+keine sichtbaren Bearbeiten-Schaltflächen für Schadensbilder.
 
-Unterstützte Kategorien:
-- Schadensbild
-- Messbild
-- Objektbild
-- Bauteilöffnung
+Fix:
+- Im Bereich „Schadensbericht & Stammdaten“ gibt es jetzt einen eigenen
+  Abschnitt „Schadensbilder bearbeiten“.
+- Jedes Schadensbild zeigt direkt:
+  Bearbeiten
+  Entfernen
+- Bearbeitbar:
+  Kategorie
+  Raum
+  Bauteil
+  Beschreibung
+  Bild ersetzen
+- Objektbilder und Bauteilöffnungen sind ebenfalls enthalten.
+- Messbilder werden darunter ebenfalls angezeigt und können bearbeitet/entfernt werden.
+- Entfernt man ein Messbild, bleibt die Messung erhalten.
+- Gute mobile Darstellung mit großen Schaltflächen.
 
-Wichtig:
-- Wird ein Bild ersetzt, bleiben Raum/Bauteil/Beschreibung erhalten.
-- Wird ein Foto gelöscht, das an einer Messung hängt, bleibt die Messung erhalten; nur die Foto-Verknüpfung wird entfernt.
-- Auf dem Handy öffnet sich der Bearbeitungsdialog als große, gut bedienbare Ansicht von unten.
-- Keine Datenbankmigration erforderlich.
-
-Dieses Paket baut auf v0.9.8.2 auf.
+Keine Datenbankmigration erforderlich.
+Baut auf v0.9.8.3 auf.

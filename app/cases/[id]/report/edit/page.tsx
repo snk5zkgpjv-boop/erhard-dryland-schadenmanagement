@@ -2,6 +2,7 @@ import Link from "next/link";
 import {requirePageUser} from "@/lib/auth";
 import DamageReportEditor from "@/components/DamageReportEditor";
 import CaseMasterEditor from "@/components/CaseMasterEditor";
+import ReportPhotoManager from "@/components/ReportPhotoManager";
 import {getSql} from "@/lib/db";
 
 export default async function EditReportPage({params}:{params:Promise<{id:string}>}){
@@ -15,8 +16,9 @@ export default async function EditReportPage({params}:{params:Promise<{id:string
  if(!rows.length)return <main className="shell"><h1>Schaden nicht gefunden</h1></main>;
  return <main className="shell">
   <div className="topbar"><Link className="back" href={`/cases/${id}`}>← Zur Schadenakte</Link><Link className="button secondary" href={`/cases/${id}/report`}>Bericht ansehen</Link></div>
-  <section className="hero"><span className="pill">Bearbeiten</span><h1>Schadensbericht & Stammdaten</h1><p className="muted">Auftraggeber, Schadensort und Berichtsdaten können hier nachträglich geändert werden.</p></section>
+  <section className="hero"><span className="pill">Bearbeiten</span><h1>Schadensbericht & Stammdaten</h1><p className="muted">Auftraggeber, Schadensort, Berichtsdaten und Schadensbilder können hier nachträglich geändert werden.</p></section>
   <section className="section"><CaseMasterEditor data={rows[0]}/></section>
   <section className="section"><DamageReportEditor caseId={id}/></section>
+  <section className="section"><ReportPhotoManager caseId={id}/></section>
  </main>
 }
