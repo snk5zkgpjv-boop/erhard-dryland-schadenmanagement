@@ -1,28 +1,35 @@
-v0.9.8.5 – BEARBEITEN-BUTTON IM NORMALEN FOTO-REITER
+v0.9.8.6 – FINALER FIX FÜR BEARBEITEN-BUTTON IM FOTO-REITER
 
-Prüfergebnis:
-- Die aktuelle Vercel-Version ist erfolgreich deployed und READY.
-- CasePhotoEditEnhancer ist in app/layout.tsx geladen.
-- Die Fotos-API liefert 200.
-- Im normalen Reiter „Fotos“ sind die Foto-Karten korrekt als .photoCard/.photoBody vorhanden.
-- Der bisherige dynamische Zuordnungsmechanismus war trotzdem zu empfindlich und konnte
-  die Karte nicht zuverlässig dem Datensatz zuordnen. Dann wurden gar keine Buttons eingefügt.
+Jetzt wurde die tatsächliche Ursache gefunden.
 
-Fix:
-- Zuordnung zuerst über normalisierte Bild-URL.
-- Falls die URL abweicht: sichere Zuordnung über die Kartenreihenfolge.
-- Buttons werden auch nach Tabwechsel erneut eingeblendet.
-- Zusätzlicher Wiederholungscheck verhindert, dass sie nach React-Render verschwinden.
-- Direkt in JEDEM Bild im normalen Reiter „Fotos“:
-    Bearbeiten
-    Entfernen
-- Bearbeiten öffnet:
-    Kategorie
-    Raum
-    Bauteil
-    Beschreibung
-    Bild ersetzen
-- Buttons werden ausdrücklich sichtbar/aktiv gestylt.
+Die Version v0.9.8.5 ist korrekt deployed und CasePhotoEditEnhancer wird geladen.
+Der Fehler lag im JavaScript selbst:
 
-Keine Datenbankmigration.
-Baut auf v0.9.8.4 auf.
+- Der MutationObserver erkannte eine Änderung.
+- Danach wurden vorhandene Buttons entfernt und neu eingefügt.
+- Das Einfügen löste sofort wieder den MutationObserver aus.
+- Dadurch entstand eine DOM-Endlosschleife aus Entfernen/Neu-Einfügen.
+- Der Browser konnte die Buttons deshalb teilweise gar nicht sichtbar rendern.
+
+v0.9.8.6:
+- Vorhandene Buttons werden NIE mehr entfernt.
+- Pro Foto wird nur einmal ein Aktionsbereich angelegt.
+- MutationObserver reagiert nur noch auf echte Tab-/React-Änderungen.
+- Zusätzlich wird einmal pro Sekunde geprüft, falls der Foto-Tab später geöffnet wird.
+
+Unter jedem Bild im normalen Reiter „Fotos“ müssen danach sichtbar sein:
+- Bearbeiten
+- Entfernen
+
+Bearbeiten:
+- Kategorie
+- Raum
+- Bauteil
+- Beschreibung
+- Bild ersetzen
+
+Keine Datenbankmigration erforderlich.
+
+Nur diese beiden Dateien ersetzen:
+components/CasePhotoEditEnhancer.tsx
+app/photo-edit-fix.css

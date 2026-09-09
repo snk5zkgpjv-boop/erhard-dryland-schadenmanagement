@@ -64,15 +64,17 @@ export default function CasePhotoEditEnhancer(){
     const img=card.querySelector<HTMLImageElement>("img");
     if(!img)return;
 
-    // Erst über URL zuordnen, falls Browser die URL verändert hat zusätzlich
-    // über die gleiche Reihenfolge wie im React-Array.
-    const p=photos.find(x=>sameUrl(img.src,x.file_url)) || photos[index];
+    const p=photos.find(x=>sameUrl(img.src,x.file_url))||photos[index];
     if(!p)return;
 
     const body=card.querySelector<HTMLElement>(".photoBody")||card;
 
-    // Alte dynamische Buttons entfernen und sauber neu setzen.
-    body.querySelectorAll(".photoActionRow").forEach(x=>x.remove());
+    // WICHTIG: vorhandene Buttons NICHT entfernen.
+    // In v0.9.8.5 wurden sie bei jedem MutationObserver-Lauf wieder
+    // entfernt und neu eingefügt. Das erzeugte eine Endlosschleife,
+    // sodass die Buttons häufig nie sichtbar gerendert wurden.
+    const existing=body.querySelector<HTMLElement>(`.photoActionRow[data-photo-id="${p.id}"]`);
+    if(existing)return;
 
     const row=document.createElement("div");
     row.className="photoActionRow";
@@ -82,14 +84,19 @@ export default function CasePhotoEditEnhancer(){
     edit.type="button";
     edit.className="button secondary smallButton";
     edit.textContent="Bearbeiten";
-    edit.onclick=(e)=>{e.preventDefault();e.stopPropagation();setEditing(p)};
+    edit.onclick=(e)=>{
+     e.preventDefault();
+     e.stopPropagation();
+     setEditing(p)
+    };
 
     const del=document.createElement("button");
     del.type="button";
     del.className="button dangerButton smallButton";
     del.textContent="Entfernen";
     del.onclick=async(e)=>{
-     e.preventDefault();e.stopPropagation();
+     e.preventDefault();
+     e.stopPropagation();
      if(!confirm("Dieses Foto wirklich aus dem Schadensfall entfernen?"))return;
      del.setAttribute("disabled","true");
      try{
@@ -100,6 +107,7 @@ export default function CasePhotoEditEnhancer(){
       });
       const j=await r.json().catch(()=>({}));
       if(!r.ok)throw new Error(j.error||"Foto konnte nicht gelöscht werden.");
+      row.remove();
       await load(caseId);
       location.reload()
      }catch(e){
@@ -114,11 +122,17 @@ export default function CasePhotoEditEnhancer(){
   }
 
   enhance();
-  const obs=new MutationObserver(()=>enhance());
-  obs.observe(document.body,{childList:true,subtree:true});
-  const timer=window.setInterval(enhance,1200);
 
-  return()=>{obs.disconnect();window.clearInterval(timer)}
+  // Observer reagiert nur noch auf echte React-/Tab-Änderungen.
+  // enhance() verändert den DOM danach nicht erneut, wenn Buttons vorhanden sind.
+  const obs=new MutationObserver(()=>requestAnimationFrame(enhance));
+  obs.observe(document.body,{childList:true,subtree:true});
+  const timer=window.setInterval(enhance,1000);
+
+  return()=>{
+   obs.disconnect();
+   window.clearInterval(timer)
+  }
  },[caseId,photos]);
 
  async function save(e:React.FormEvent<HTMLFormElement>){
