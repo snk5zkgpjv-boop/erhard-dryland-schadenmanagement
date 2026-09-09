@@ -1,1 +1,1 @@
-export async function GET(){return Response.json({ok:true,app:"erhard-dryland-schadenmanagement",version:"0.8.4"})}
+export async function GET(){return Response.json({ok:true,app:"erhard-organisationszentrale",version:"1.0.0"})}

@@ -8,8 +8,8 @@ import type { Metadata } from "next";
 import CaseMobileEditEnhancer from "@/components/CaseMobileEditEnhancer";
 import CasePhotoEditEnhancer from "@/components/CasePhotoEditEnhancer";
 export const metadata: Metadata = {
-  title:"Erhard & Dryland Schadenmanagement",
-  description:"Digitale Schadenakte für Erhard Dienstleistungen und Dryland Trocknungstechnik"
+  title:"Erhard Organisationszentrale",
+  description:"Organisation, Kunden, Zeiten, Finanzen und Familie an einem Ort"
 };
 export default function RootLayout({children}:{children:React.ReactNode}) {
   return <html lang="de"><body>{children}<CaseMobileEditEnhancer/><CasePhotoEditEnhancer/></body></html>

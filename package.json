@@ -1,6 +1,6 @@
 {
-  "name": "erhard-dryland-schadenmanagement",
-  "version": "0.9.0",
+  "name": "erhard-organisationszentrale",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
+    "imapflow": "^1.0.195",
     "next": "^15.2.0",
     "qrcode": "^1.5.4",
     "react": "^19.0.0",
