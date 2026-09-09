@@ -1,27 +1,30 @@
-v0.9.8.6 – FINALER FIX FÜR BEARBEITEN-BUTTON IM FOTO-REITER
+v0.9.8.7 – FOTO-BUTTONS ALS ECHTE REACT-KOMPONENTEN
 
-Jetzt wurde die tatsächliche Ursache gefunden.
+Diesmal keine nachträglichen HTML-/DOM-Buttons mehr.
 
-Die Version v0.9.8.5 ist korrekt deployed und CasePhotoEditEnhancer wird geladen.
-Der Fehler lag im JavaScript selbst:
+Prüfung des produktiven Codes:
+- Im Reiter „Fotos“ rendert CaseDetail die Schadensbilder als:
+  .photoCard
+    img
+    .photoBody
+- Die Fotos-API unterstützt bereits PATCH und DELETE.
+- app/layout.tsx lädt CasePhotoEditEnhancer korrekt.
 
-- Der MutationObserver erkannte eine Änderung.
-- Danach wurden vorhandene Buttons entfernt und neu eingefügt.
-- Das Einfügen löste sofort wieder den MutationObserver aus.
-- Dadurch entstand eine DOM-Endlosschleife aus Entfernen/Neu-Einfügen.
-- Der Browser konnte die Buttons deshalb teilweise gar nicht sichtbar rendern.
+Das Problem der letzten Versionen war die manuelle DOM-Manipulation.
 
-v0.9.8.6:
-- Vorhandene Buttons werden NIE mehr entfernt.
-- Pro Foto wird nur einmal ein Aktionsbereich angelegt.
-- MutationObserver reagiert nur noch auf echte Tab-/React-Änderungen.
-- Zusätzlich wird einmal pro Sekunde geprüft, falls der Foto-Tab später geöffnet wird.
+v0.9.8.7:
+- „Bearbeiten“ und „Entfernen“ werden jetzt als echte React-Portals direkt
+  in jede vorhandene .photoBody gerendert.
+- Kein document.createElement mehr.
+- Kein Entfernen/Neu-Einfügen von Buttons.
+- MutationObserver sucht nur, ob neue Fotokarten vorhanden sind.
+- React verwaltet die Buttons und den Bearbeitungsdialog selbst.
 
-Unter jedem Bild im normalen Reiter „Fotos“ müssen danach sichtbar sein:
-- Bearbeiten
-- Entfernen
+Nach dem Upload muss unter JEDER Bildbeschreibung im normalen Reiter „Fotos“
+sichtbar sein:
+[Bearbeiten] [Entfernen]
 
-Bearbeiten:
+Bearbeiten ermöglicht:
 - Kategorie
 - Raum
 - Bauteil
@@ -30,6 +33,5 @@ Bearbeiten:
 
 Keine Datenbankmigration erforderlich.
 
-Nur diese beiden Dateien ersetzen:
+Es muss nur diese Datei ersetzt werden:
 components/CasePhotoEditEnhancer.tsx
-app/photo-edit-fix.css
