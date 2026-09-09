@@ -12,7 +12,9 @@ export async function GET(_r:Request,{params}:{params:Promise<{id:string}>}){
   const offer:any=offers[0]||null,invoice:any=invoices[0]||null,assignment:any=assignments[0]||null;
   const dry:any=drying[0]||{total:0,finished:0},rep:any=reports[0]||{total:0};
   const executionStarted=Number(dry.total)>0||Number(rep.total)>0;
-  const executionFinished=Number(dry.total)>0&&Number(dry.total)===Number(dry.finished);
+  const executionFinished=Number(dry.total)>0
+    ? Number(dry.total)===Number(dry.finished)
+    : Number(rep.total)>0;
   const paid=invoice?.status==="bezahlt";
   let phase=0;
   if(offer)phase=1;if(assignment)phase=2;if(executionStarted)phase=3;if(executionFinished)phase=4;if(invoice)phase=5;if(paid)phase=6;

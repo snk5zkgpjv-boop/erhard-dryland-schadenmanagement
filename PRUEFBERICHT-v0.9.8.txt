@@ -1,0 +1,31 @@
+v0.9.8 – SYSTEMCHECK / FUNKTIONSFIXES
+
+Enthalten:
+1. Dokumente werden serverseitig genauso nach Firmenzuordnung geschützt wie Schadenakten.
+2. Dokumentlisten werden je angemeldeter Firma gefiltert.
+3. §13b / Reverse Charge:
+   - Schalter im Dokumenteditor
+   - Umsatzsteuer wird bei Aktivierung auf 0 gesetzt
+   - Gesamt = Netto
+   - Hinweistext gemäß §13b UStG in Angebot/Rechnung
+4. Nummernkreise:
+   - beim erstmaligen Anlegen eines Jahres werden bereits vorhandene Nummern berücksichtigt
+   - manuell geänderte Dokumentnummern synchronisieren den laufenden Zähler
+5. Direktangebot / Direktrechnung:
+   - getrennte Rechnungsanschrift und Leistungsort
+6. Rapporte:
+   - Firma wird serverseitig aus der Schadenakte übernommen, nicht aus Browserdaten
+7. Workflow:
+   - Aufträge ohne Trocknungsgeräte können über vorhandene Rapporte den Schritt Abschluss erreichen
+8. Neue Schadenakte:
+   - klarer Hinweis, dass die Projektnummer automatisch vergeben wird
+9. Erhard-Fußzeile:
+   - nur Mobilnummer, kein Festnetz
+10. Dokumentbearbeitung:
+   - Positionen werden bei PUT innerhalb einer Datenbanktransaktion ersetzt
+
+Keine Datenbankmigration erforderlich.
+
+Hinweis:
+Das Paket ist ein PATCH auf die derzeit produktive Version 0.9.7.1.
+ZIP entpacken und die enthaltenen Dateien mit gleicher Ordnerstruktur in GitHub ersetzen.

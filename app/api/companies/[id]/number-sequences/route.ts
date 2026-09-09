@@ -11,6 +11,25 @@ async function allowed(request:Request,id:string){
  if(!ok.length)return {error:Response.json({error:"Keine Berechtigung für diese Firma."},{status:403})};
  return {sql};
 }
+async function existingCurrent(sql:any,companyId:string,type:string,year:number){
+ if(type==="offer"||type==="invoice"){
+  const docType=type==="offer"?"angebot":"rechnung";
+  const rows=await sql`SELECT COALESCE(MAX(
+    CASE WHEN document_number ~ ${`^${year}-[0-9]+$`} THEN split_part(document_number,'-',2)::integer ELSE NULL END
+  ),0)::integer n FROM documents WHERE company_id=${companyId} AND document_type=${docType}`;
+  return Number(rows[0]?.n||0)
+ }
+ if(type==="assignment"){
+  const rows=await sql`SELECT COALESCE(MAX(
+    CASE WHEN assignment_number ~ ${`^AE-${year}-[0-9]+$`} THEN split_part(assignment_number,'-',3)::integer ELSE NULL END
+  ),0)::integer n FROM assignments WHERE company_id=${companyId}`;
+  return Number(rows[0]?.n||0)
+ }
+ const rows=await sql`SELECT COALESCE(MAX(
+   CASE WHEN case_number ~ ${`^${year}-[0-9]+$`} THEN split_part(case_number,'-',2)::integer ELSE NULL END
+ ),0)::integer n FROM cases WHERE company_id=${companyId}`;
+ return Number(rows[0]?.n||0)
+}
 export async function GET(request:Request,{params}:{params:Promise<{id:string}>}){
  try{
   const{id}=await params,a=await allowed(request,id);if(a.error)return a.error;const sql:any=a.sql;
@@ -30,11 +49,15 @@ export async function PUT(request:Request,{params}:{params:Promise<{id:string}>}
    const year=n(x.sequence_year,0),start=Math.max(0,n(x.start_value,1)),width=Math.min(12,Math.max(1,n(x.number_width,3)));
    if(year<2000||year>2100)continue;
    const prefix=t(x.prefix),pattern=t(x.format_pattern)||(type==="assignment"?"{PREFIX}-{YEAR}-{NUMBER}":"{YEAR}-{NUMBER}");
+   const found=await existingCurrent(sql,id,type,year);
+   const initial=Math.max(found,start-1);
    await sql`
     INSERT INTO number_sequences(company_id,sequence_type,sequence_year,start_value,current_value,prefix,number_width,format_pattern)
-    VALUES(${id},${type},${year},${start},0,${prefix},${width},${pattern})
+    VALUES(${id},${type},${year},${start},${initial},${prefix},${width},${pattern})
     ON CONFLICT(company_id,sequence_type,sequence_year) DO UPDATE SET
-      start_value=EXCLUDED.start_value,prefix=EXCLUDED.prefix,number_width=EXCLUDED.number_width,
+      start_value=EXCLUDED.start_value,
+      current_value=GREATEST(number_sequences.current_value,${found}),
+      prefix=EXCLUDED.prefix,number_width=EXCLUDED.number_width,
       format_pattern=EXCLUDED.format_pattern,updated_at=now()`;
   }
   return Response.json({ok:true})

@@ -23,10 +23,9 @@ export async function middleware(req:NextRequest){
     if(!rows.length)throw new Error("session");
     const userId=String(rows[0].id);
 
-    // Serverseitiger Firmenschutz für jede Schadenakte und alle Unterrouten.
-    const match=path.match(/^\/(?:api\/)?cases\/([0-9a-fA-F-]{36})(?:\/|$)/);
-    if(match){
-      const caseId=match[1];
+    const caseMatch=path.match(/^\/(?:api\/)?cases\/([0-9a-fA-F-]{36})(?:\/|$)/);
+    if(caseMatch){
+      const caseId=caseMatch[1];
       const allowed=await sql`SELECT 1
         FROM cases ca
         JOIN app_user_companies auc ON auc.company_id=ca.company_id
@@ -35,6 +34,20 @@ export async function middleware(req:NextRequest){
       if(!allowed.length){
         if(api)return NextResponse.json({error:"Kein Zugriff auf diesen Schadensfall."},{status:403});
         const u=req.nextUrl.clone();u.pathname="/";u.search="";return NextResponse.redirect(u);
+      }
+    }
+
+    const documentMatch=path.match(/^\/(?:api\/)?documents\/([0-9a-fA-F-]{36})(?:\/|$)/);
+    if(documentMatch){
+      const documentId=documentMatch[1];
+      const allowed=await sql`SELECT 1
+        FROM documents d
+        JOIN app_user_companies auc ON auc.company_id=d.company_id
+        WHERE d.id=${documentId} AND auc.user_id=${userId}
+        LIMIT 1`;
+      if(!allowed.length){
+        if(api)return NextResponse.json({error:"Kein Zugriff auf dieses Dokument."},{status:403});
+        const u=req.nextUrl.clone();u.pathname="/documents";u.search="";return NextResponse.redirect(u);
       }
     }
 

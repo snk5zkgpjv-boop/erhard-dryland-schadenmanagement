@@ -7,7 +7,7 @@ export default function NewCaseForm(){
  async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();setSaving(true);setError("");const body=Object.fromEntries(new FormData(e.currentTarget).entries());try{const res=await fetch("/api/cases",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const data=await res.json();if(!res.ok)throw new Error(data.error||"Speichern fehlgeschlagen.");router.push("/cases/"+data.id);router.refresh()}catch(e){setError(e instanceof Error?e.message:"Speichern fehlgeschlagen.")}finally{setSaving(false)}}
  return <form onSubmit={submit} className="card">{error&&<div className="error" style={{marginBottom:12}}>{error}</div>}<div className="formGrid">
   <div className="field"><label>Ausführende Firma *</label><select name="company_id" required defaultValue=""><option value="" disabled>Firma auswählen</option>{companies.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></div>
-  <div className="field"><label>Vorgangs-/Projektnummer</label><input name="case_number" placeholder="z. B. 2026-0041"/></div>
+  <div className="field"><label>Vorgangs-/Projektnummer</label><input name="case_number" placeholder="leer lassen = automatische Projektnummer"/><small>Die Nummer wird getrennt je Firma und Jahr fortlaufend vergeben.</small></div>
   <div className="field full"><label>Bezeichnung des Schadens *</label><input name="title" required placeholder="z. B. Wasserschaden Badezimmer – Müller"/></div>
 
   <div className="field full"><h3 style={{margin:"8px 0 0"}}>Auftraggeber / Kunde</h3><p className="muted small" style={{margin:"4px 0 0"}}>Diese Anschrift kann vom Schadensort abweichen und wird im Schadensbericht als Auftraggeber ausgegeben.</p></div>

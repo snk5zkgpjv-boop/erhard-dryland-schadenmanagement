@@ -18,16 +18,10 @@ function inferGroup(x:any){
  if(/an\/abfahrt|anfahrt|fahrzeug/.test(s))return "Fahrzeugkostenanteil";
  return "Sonstige Leistungen";
 }
-function itemMm(x:any){
- const text=String(x.description||"").replace(/\n+/g," ").trim();
- const lines=Math.max(1,Math.ceil(text.length/74));
- return 5.0+lines*3.45;
-}
+function itemMm(x:any){const text=String(x.description||"").replace(/\n+/g," ").trim();const lines=Math.max(1,Math.ceil(text.length/74));return 5.0+lines*3.45}
 function groupMm(g:any){return 6.2+g.items.reduce((s:number,x:any)=>s+itemMm(x),0)+6.2}
 function paginate(groups:any[]){
- const pages:any[][]=[];let page:any[]=[],used=0;
- const firstCap=143,otherCap=226;
- let cap=firstCap;
+ const pages:any[][]=[];let page:any[]=[],used=0;const firstCap=143,otherCap=226;let cap=firstCap;
  for(const g of groups){
   const gh=groupMm(g);
   if(page.length&&used+gh>cap){pages.push(page);page=[];used=0;cap=otherCap}
@@ -36,16 +30,12 @@ function paginate(groups:any[]){
   for(const item of g.items){
    const ih=itemMm(item),overhead=12.4;
    const partH=overhead+part.reduce((s:number,x:any)=>s+itemMm(x),0);
-   if(part.length&&used+partH+ih>cap){
-    page.push({name:g.name,items:part,continued:true});pages.push(page);
-    page=[];used=0;cap=otherCap;part=[]
-   }
+   if(part.length&&used+partH+ih>cap){page.push({name:g.name,items:part,continued:true});pages.push(page);page=[];used=0;cap=otherCap;part=[]}
    part.push(item)
   }
   if(part.length){page.push({name:g.name,items:part,continued:false});used+=12.4+part.reduce((s:number,x:any)=>s+itemMm(x),0)}
  }
- if(page.length)pages.push(page);
- return pages.length?pages:[[]]
+ if(page.length)pages.push(page);return pages.length?pages:[[]]
 }
 
 export default async function DocumentView({params}:{params:Promise<{id:string}>}){
@@ -96,8 +86,9 @@ export default async function DocumentView({params}:{params:Promise<{id:string}>
      {!last&&<tfoot><tr className={styles.transfer}><td></td><td></td><td colSpan={2}>Übertrag</td><td>€ {money(carry)}</td></tr></tfoot>}
     </table>
     {last&&<><section className={styles.totals}><div><span>Netto</span><strong>{money(d.net_total)}</strong></div>{!d.reverse_charge&&<div><span>{Number(d.vat_total||0)>0?"19% MwSt":"MwSt"}</span><strong>{money(d.vat_total)}</strong></div>}<div className={styles.grand}><span>Gesamtbetrag €</span><strong>{money(d.gross_total)}</strong></div></section>
+     {d.reverse_charge&&<section className={styles.payment}><p><strong>Steuerschuldnerschaft des Leistungsempfängers gemäß § 13b UStG.</strong><br/>Die Umsatzsteuer wird vom Leistungsempfänger geschuldet und daher nicht ausgewiesen.</p></section>}
      {isInvoice&&<section className={styles.payment}><p>Zahlbar sofort und ohne Abzug.</p>{d.document_number&&<p>Bei Überweisung mittels Internet-Banking tragen Sie bitte im Feld "Verwendungszweck"<br/>die Rechnungsnummer {d.document_number} ein.</p>}</section>}</>}
-    <footer className={styles.footer}><div>Kontoinhaber: {footer.account_holder||d.company_name}<br/>IBAN: {d.iban||""}<br/>BIC: {d.bic||""}<br/>Steuernummer: {d.tax_number||""}</div><div className={styles.pageNo}>Seite {pi+1} von {pages.length}</div><div className={styles.footerRight}><strong>{d.company_name}</strong><br/>{d.company_street||""}<br/>{[d.company_postal_code,d.company_city].filter(Boolean).join(" ")}<br/>{d.phone&&<>Tel.: {d.phone}<br/></>}{d.mobile&&<>Mobil: {d.mobile}</>}</div></footer>
+    <footer className={styles.footer}><div>Kontoinhaber: {footer.account_holder||d.company_name}<br/>IBAN: {d.iban||""}<br/>BIC: {d.bic||""}<br/>Steuernummer: {d.tax_number||""}</div><div className={styles.pageNo}>Seite {pi+1} von {pages.length}</div><div className={styles.footerRight}><strong>{d.company_name}</strong><br/>{d.company_street||""}<br/>{[d.company_postal_code,d.company_city].filter(Boolean).join(" ")}<br/>{d.company_code==="ERHARD"?<>{d.mobile&&<>Mobil: {d.mobile}</>}</>:<>{d.phone&&<>Tel.: {d.phone}<br/></>}{d.mobile&&<>Mobil: {d.mobile}</>}</>}</div></footer>
    </article>
   })}
  </main>
