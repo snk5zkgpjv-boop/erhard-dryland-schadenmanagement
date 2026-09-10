@@ -20,6 +20,9 @@ async function createOrganizationSchema(){
   )`;
   await sql`CREATE UNIQUE INDEX IF NOT EXISTS org_time_source_external_uq ON org_time_entries(owner_id,source,external_id) WHERE external_id IS NOT NULL`;
   await sql`CREATE INDEX IF NOT EXISTS org_time_owner_started_idx ON org_time_entries(owner_id,started_at DESC)`;
+  await sql`ALTER TABLE org_time_entries ADD COLUMN IF NOT EXISTS approval_status text NOT NULL DEFAULT 'confirmed'`;
+  await sql`ALTER TABLE org_time_entries ADD COLUMN IF NOT EXISTS hourly_rate_cents integer`;
+  await sql`ALTER TABLE org_time_entries ADD COLUMN IF NOT EXISTS travel_flat_cents integer`;
   await sql`CREATE TABLE IF NOT EXISTS org_schedule_entries(
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(), owner_id uuid NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,
     category text NOT NULL DEFAULT 'appointment', title text NOT NULL, starts_at timestamptz NOT NULL, ends_at timestamptz,
