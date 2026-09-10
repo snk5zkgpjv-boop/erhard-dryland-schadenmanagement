@@ -1,7 +1,7 @@
 import {NextRequest,NextResponse} from "next/server";
 import {neon} from "@neondatabase/serverless";
 
-const PUBLIC_PREFIXES=["/login","/setup","/api/auth","/api/health","/api/organization/voice","/api/organization/ecg-sync"];
+const PUBLIC_PREFIXES=["/login","/setup","/reset-password","/api/auth","/api/health","/api/organization/voice","/api/organization/ecg-sync","/mcp","/oauth","/.well-known"];
 function isPublic(path:string){return PUBLIC_PREFIXES.some(p=>path===p||path.startsWith(p+"/"))}
 async function sha256(v:string){const d=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));return Array.from(new Uint8Array(d)).map(x=>x.toString(16).padStart(2,"0")).join("")}
 

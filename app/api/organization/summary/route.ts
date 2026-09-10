@@ -11,7 +11,7 @@ export async function GET(request:Request){
         COALESCE(SUM(EXTRACT(EPOCH FROM (COALESCE(ended_at,now())-started_at))/60) FILTER(WHERE started_at>=date_trunc('week',now())),0)::int AS week_minutes,
         COALESCE(SUM(EXTRACT(EPOCH FROM (COALESCE(ended_at,now())-started_at))/60) FILTER(WHERE area='ecg' AND started_at>=date_trunc('week',now()) AND volunteer=false),0)::int AS ecg_week_minutes,
         COALESCE(SUM(EXTRACT(EPOCH FROM (COALESCE(ended_at,now())-started_at))/60) FILTER(WHERE volunteer=true AND started_at>=date_trunc('week',now())),0)::int AS volunteer_minutes
-        FROM org_time_entries WHERE owner_id=${ownerId} AND deleted_at IS NULL`,
+        FROM org_time_entries WHERE owner_id=${ownerId} AND deleted_at IS NULL AND approval_status='confirmed'`,
       sql`SELECT COALESCE(SUM(CASE WHEN kind='income' THEN amount_cents ELSE 0 END),0)::bigint AS income_cents,COALESCE(SUM(CASE WHEN kind='expense' THEN amount_cents ELSE 0 END),0)::bigint AS expense_cents FROM org_finance_entries WHERE owner_id=${ownerId} AND deleted_at IS NULL AND entry_date>=date_trunc('month',now())::date`,
       sql`SELECT COALESCE(SUM(CASE WHEN due_date IS NULL THEN target_cents/GREATEST(interval_months,1) ELSE GREATEST(target_cents-saved_cents,0)/GREATEST(CEIL(EXTRACT(EPOCH FROM (due_date::timestamp-now()))/2629800),1) END),0)::bigint AS monthly_required_cents FROM org_reserves WHERE owner_id=${ownerId} AND deleted_at IS NULL`,
       sql`SELECT * FROM org_schedule_entries WHERE owner_id=${ownerId} AND deleted_at IS NULL AND starts_at>=now() ORDER BY starts_at LIMIT 5`,

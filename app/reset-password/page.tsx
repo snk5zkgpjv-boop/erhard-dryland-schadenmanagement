@@ -1,0 +1,1 @@
+import {Suspense} from "react";import {ResetPasswordForm} from "@/components/PasswordForm";export default function Reset(){return <main className="authShell"><Suspense><ResetPasswordForm/></Suspense></main>}
