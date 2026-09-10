@@ -62,4 +62,4 @@ export async function middleware(req:NextRequest){
     const u=req.nextUrl.clone();u.pathname="/login";return NextResponse.redirect(u);
   }
 }
-export const config={matcher:["/((?!_next/static|_next/image|favicon.ico|erhard-logo.png|dryland-logo.png).*)"]};
+export const config={matcher:["/((?!_next/static|_next/image|favicon.ico|erhard-logo.png|dryland-logo.png|organization-app-icon.png).*)"]};
