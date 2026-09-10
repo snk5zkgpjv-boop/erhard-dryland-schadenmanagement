@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import NextImage from "next/image";
 import {FormEvent,useEffect,useMemo,useState} from "react";
 
 type Entity="time"|"schedule"|"finance"|"reserves"|"family"|"mail"|"documents";
@@ -34,7 +35,7 @@ export default function OrganizationHub({displayName}:{displayName:string}){
  async function syncMail(id:string){setBusy(true);setError("");try{const r=await fetch("/api/organization/mail-sync",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id})}),j=await r.json();if(!r.ok)throw new Error(j.error);setStatus(j.message);await load("mail")}catch(e){setError(e instanceof Error?e.message:"Abruf fehlgeschlagen")}finally{setBusy(false)}}
  const visible=useMemo(()=>items.filter(x=>trash||!x.deleted_at),[items,trash]);
  return <>
-  <header className="orgHero"><div className="orgHead"><div className="orgBrand"><img src="/organization-logo.png" alt="Erhard Organisationszentrale"/><div><span className="pill">Persönlicher Admin-Bereich</span><h1>Organisationszentrale</h1><p>Hallo {displayName}. Arbeit, Familie, Finanzen und Termine an einem geschützten Ort.</p></div></div><div className="actions"><Link className="button secondary" href="/">Schadenmanagement</Link><button className="button secondary" disabled={busy} onClick={()=>load(entity,true)}>{busy?"Aktualisiere …":"Aktualisieren"}</button></div></div></header>
+  <header className="orgHero"><div className="orgHead"><div className="orgBrand"><div className="orgLogo"><NextImage src="/organization-logo.png" alt="Erhard Organisationszentrale" width={420} height={156} priority/></div><div><span className="pill">Persönlicher Admin-Bereich</span><h1>Organisationszentrale</h1><p>Hallo {displayName}. Arbeit, Familie, Finanzen und Termine an einem geschützten Ort.</p></div></div><div className="actions"><Link className="button secondary" href="/">Schadenmanagement</Link><button className="button secondary" disabled={busy} onClick={()=>load(entity,true)}>{busy?"Aktualisiere …":"Aktualisieren"}</button></div></div></header>
   <nav className="orgTabs">{tabs.map(([key,label])=><button key={key} className={`orgTab ${tab===key?"active":""}`} onClick={()=>choose(key)}>{label}</button>)}</nav>
   {error&&<div className="orgStatus error">{error}</div>}{status&&<div className="orgStatus">{status}</div>}
   {tab==="today"?<Today summary={summary} refresh={()=>fetch("/api/organization/summary",{cache:"no-store"}).then(r=>r.json()).then(setSummary)}/>:<>
