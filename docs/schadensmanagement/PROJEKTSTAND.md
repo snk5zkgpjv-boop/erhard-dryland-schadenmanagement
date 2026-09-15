@@ -28,3 +28,15 @@ Fachliche Dokumente und Nummern müssen vom Rechnungssystem geführt werden; kei
 ## Stand und Pflege
 
 Diese Änderung ergänzt ausschließlich Dokumentation. Kein neuer Fachfunktions-/PDF-/Produktivdatentest ausgeführt. Offene Anforderungen nicht ungeprüft als Fehler im aktuellen Code oder als umgesetzt deklarieren. Bei Änderungen Anforderung, Commit, Prüfung und Live-/Vorschauzustand mitpflegen. Gemeinsame Übersicht: [PROJEKTSTAND](../../PROJEKTSTAND.md).
+
+## Rechnungseditor – 15.09.2026
+
+Anforderung: Trocknerpositionen zuverlässig aus dem Schaden übernehmen und Artikelauswahl flüssiger bedienen; Schadensberichte und Organisationsmodul unverändert lassen.
+
+Implementiert auf fix/invoice-drying-articles (Basis main 6bf38ac): Dokumenteditor ermittelt den Schaden auch aus einem bestehenden Dokument bzw. Quellangebot. Neue Rechnungen direkt aus dem Schaden erhalten Gerätepositionen automatisch; vorhandene Dokumente/Angebote werden nicht ungefragt ersetzt. Fehler beim Laden der Vorschläge werden angezeigt. Mehrfaches Übernehmen vermeidet Duplikate anhand der Installations-ID. Eindeutig zuordenbare ältere Trocknungspositionen werden verknüpft; mehrdeutige Altpositionen bleiben zur manuellen Prüfung erhalten. Laufzeitaktualisierung betrifft nur verknüpfte Tagespositionen, erhält individuelle Preise und verändert keine Pauschalen oder sonstigen Leistungspositionen. Laufende Geräte sind vorläufig; keine erfundenen Tagespreise oder pauschale 21-Tage-Abrechnung.
+
+Artikel: Einstiegsliste ohne Suchtext, bis zu 100 Treffer pro Suche, Abbruch veralteter Suchanfragen, Lade-/Fehler-/Leermeldungen, Suche nach „Trockner“ findet „Trocknung“. Katalogpreis gezielt einer Position zuordnen, ohne Gerätebeschreibung/Menge zu überschreiben; abweichende Einheiten und fehlende Preise werden abgewiesen. Nullpreise werden zur Prüfung angezeigt. Katalog-Stammdaten unverändert.
+
+Interner Vertrag: GET /api/cases/:id/billing-suggestions → DocumentBuilder; source_type enthält drying:<Installations-ID> und wird über das vorhandene Dokumentpositionsfeld gespeichert und aus Angeboten erhalten. Keine Migration, keine neue Nummernvergabe und keine Schnittstellenänderung zum Organisationstool/ECG. Keine Produktivdaten verändert.
+
+Geprüft: TypeScript-Prüfung, vollständiger Next.js-Produktionsbuild sowie tests/document-items.cjs und tests/document-builder.cjs bestanden. Letzterer testet Editor-Hooks mit gemockten API-Antworten (Neuanlage, Bearbeiten, Angebotsübernahme, Doppelklick); kein angemeldeter Browser-/Datenbank-/PDF-Ende-zu-Ende-Test. Nach abschließendem Build noch kleine Schutzergänzung für Pauschalen und Formularinitialisierung; anschließend Typprüfung und Regressionstests erneut bestanden. Noch nicht live veröffentlicht.
