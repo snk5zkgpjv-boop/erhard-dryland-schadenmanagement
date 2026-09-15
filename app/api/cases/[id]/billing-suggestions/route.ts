@@ -20,8 +20,8 @@ export async function GET(_r:Request,{params}:{params:Promise<{id:string}>}){
    const kw=d.power_kw_override!=null?Number(d.power_kw_override):(d.power_watts!=null?Number(d.power_watts)/1000:null);
    const kwh=d.consumption_kwh_override!=null?Number(d.consumption_kwh_override):(kw!=null?kw*days*24:null);
    suggested_items.push({
-    source_type:"drying",search_term:term,description:`${term}${d.equipment_name?` – ${d.equipment_name}`:""}${d.room?` (${d.room})`:""}`,
-    quantity:Number(days.toFixed(1)),unit:"Tage",unit_price:0,vat_rate:19,equipment_code:d.equipment_code||null,power_kw:kw,consumption_kwh:kwh
+    source_type:`drying:${d.id}`,search_term:term,description:`${term}${d.equipment_name?` – ${d.equipment_name}`:""}${d.room?` (${d.room})`:""}${d.equipment_code?` [${d.equipment_code}]`:""}`,
+    quantity:Number((Number.isFinite(days)?Math.max(0,days):0).toFixed(2)),unit:"Tage",unit_price:0,vat_rate:19,equipment_code:d.equipment_code||null,power_kw:kw,consumption_kwh:kwh,ongoing:!d.removed_at
    })
   }
   if(reports.length)words.push("Rapportarbeiten");
