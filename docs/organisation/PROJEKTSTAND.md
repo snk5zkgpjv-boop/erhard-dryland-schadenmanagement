@@ -1,6 +1,6 @@
 # Projektstand – Organisationstool / Erhard Organisationszentrale
 
-Stand: 14.09.2026. Code-Grundlage main `470a3ab`; keine neue funktionale Veröffentlichung durch diese Dokumentationsarbeit.
+Stand: 23.09.2026. Technische Übergabe; historische Releases und Prüfungen sind unten datiert. Diese Aktualisierung betrifft ausschließlich Dokumentation.
 
 ## Verantwortungsbereich
 
@@ -12,13 +12,13 @@ Code: `components/organization/OrganizationHub.tsx`, `lib/organization.ts`, `app
 
 Empfänger: `POST /api/organization/ecg-sync`; gemeinsamer Bearer-Schlüssel `ORGANIZATION_SYNC_TOKEN`. Sender wird in ECG über `ORGANIZATION_API_URL` und `ORGANIZATION_SYNC_USER_EMAIL` konfiguriert.
 
-- Payload `{entries:[...]}`; Felder `id`, `start`, `end`, `workLabel`, `note`, `volunteer`.
+- Payload `{ownerEmail,entries:[...]}`; Felder `id`, `start`, `end`, `workLabel`, `note`, `volunteer`.
 - Höchstens 1000 Einträge pro Request; ungültige Einträge ohne ID/Start übersprungen.
 - Speicherung in `org_time_entries` als `source=ecg`, `area=ecg`.
-- Zuordnung aktuell zum zuerst angelegten aktiven Administrator des Empfängers; diese Einschränkung vor Mehrmandantenbetrieb klären.
+- Zuordnung ausschließlich zu einem aktiven Konto mit der explizit übermittelten Eigentümer-E-Mail; kein Fallback zum ersten Administrator.
 - Idempotenz durch `(owner_id,source,external_id)`; wiederholte Übertragung aktualisiert Inhalt.
 - Keine Löschweitergabe allein aufgrund fehlender Quelleinträge; kein Rückkanal nach ECG.
-- Fehler: ungültiger Schlüssel 401; kein Administrator 503; sonstiger Verarbeitungsfehler 500. Sender prüft HTTP-Fehler derzeit nicht ausdrücklich.
+- Fehler: ungültiger Schlüssel 401; kein passendes Konto 503; sonstiger Verarbeitungsfehler 500. Sender prüft HTTP-Status und bestätigte Anzahl.
 - Konfiguration und reale Synchronisation nicht Ende-zu-Ende geprüft.
 
 ## Weitere Verbindungen und Abgrenzungen
@@ -50,3 +50,13 @@ ECG ergänzt Aufnahme/Text → bearbeitbare Vorschau → explizite Bestätigung 
 Der neue ECG-Sender verwendet den bestehenden Bearer-Kanal, prüft HTTP-Erfolg und `{ok:true,synced}` auf vollständige Übernahme und sendet große Listen in 500er-Blöcken. Speicherung in ECG bleibt bei Übertragungsfehlern erhalten; die ECG-Maske unterscheidet bestätigt, offen, nicht eingerichtet und nicht zuständig. Wiederholen ist manuell und beim nächsten normalen ECG-Speichern möglich, nicht über einen dauerhaften Hintergrundjob. Bestehende externe IDs ermöglichen idempotente Wiederholung. Weiterhin kein automatischer Löschabgleich oder Rückkanal.
 
 Prüfung: Empfängercode auf main gelesen; Vertrag und Fehlerpfade im ECG-Projekt mit synthetischen Tests geprüft. Keine echten Testbuchungen und kein angemeldeter End-to-End-Test mit beiden Produktivsystemen. Veröffentlichung des Sprachfeatures siehe ECG-PROJEKTSTAND.md. Dieser Nachtrag ändert ausschließlich Dokumentation.
+
+## Datenpflege und Übergabe – 23.09.2026
+
+Bestehende Produktionsdatenbanken wurden getrennt zugeordnet und autorisierte fehlende Zeitbuchungen nach Abgleich ergänzt. ECG-Übernahmen behalten source=ecg und die ursprüngliche external_id; Kundeneinsätze liegen unter source=organization im Organisationssystem. Wiederholungen werden über externe Kennungen und Abgleich vorhandener Zeiträume abgefangen. Datenänderungen sind in org_audit_log protokolliert. Einzelbuchungen, Kundenangaben, Infrastrukturkennungen und Zugangsdaten gehören nicht in dieses öffentliche Repository.
+
+Nachübertragene Daten wurden per Datenbankabfrage geprüft; aktualisierte ECG-Wochensummen und nachgetragene Kundeneinträge zusätzlich in der angemeldeten Organisationsoberfläche gesehen. Spätere einzelne Ergänzungen wurden durch Datenbankergebnisse bestätigt. Dies belegt die Datenpflege, nicht einen automatischen End-to-End-Synchronisationslauf.
+
+Wichtig: Direkte SQL-Ergänzungen in der ECG-Datenbank lösen den API-basierten Zeit-Sync nicht aus. Nach einer solchen Ergänzung die autorisierte Übertragung gesondert ausführen und den Empfänger prüfen. Automatischen Sync und echten Sprach-/Mikrofonablauf weiterhin gesondert testen. Keine Rechnung wurde durch die Zeitnachträge erzeugt.
+
+AGENTS.md verlangt jetzt ausdrücklich die Pflege dieses Projektstands vor Abschluss technischer Änderungen, auch in neuen Chats. Reine Zeitbuchungen bleiben in der Datenbank und benötigen keinen öffentlichen Commit pro Einsatz. Kein Hintergrunddienst zur Erkennung externer Änderungen eingerichtet.
