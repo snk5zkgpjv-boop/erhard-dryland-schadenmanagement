@@ -41,3 +41,12 @@ Zeit-Sync inklusive Fehlern, Benutzerzuordnung und Löschverhalten testen. Angeb
 Feature-Branch ergänzt `org_ecg_issue_plans` und den Bearer-geschützten Empfänger `POST /api/organization/ecg-planning-sync`. Private ECG-Aufwandsschätzungen werden dem Organisationskonto über die konfigurierte Eigentümer-E-Mail zugeordnet und auf „Heute“ als offene ECG-Aufgaben samt geplanter Gesamtdauer und Anzahl ungeschätzter Aufgaben angezeigt. Sie bleiben von `org_time_entries` getrennt und zählen daher erst nach tatsächlicher Zeiterfassung als geleistete Wochenzeit. Der bestehende ECG-Zeitimport wurde ebenfalls von „erster aktiver Administrator“ auf explizite E-Mail-Zuordnung umgestellt.
 
 Feature-Branch noch nicht als Live-Stand behaupten; Build, Vorschau und Produktionsfreigabe separat nachweisen.
+
+
+## Direkte Spracheingabe in ECG – 23.09.2026
+
+ECG ergänzt Aufnahme/Text → bearbeitbare Vorschau → explizite Bestätigung → eigene Zeitbuchungen. Der Organisations-Empfänger bleibt unverändert. Der aktuelle Vertrag enthält `{ownerEmail,entries}` und ordnet anhand der expliziten Eigentümer-E-Mail zu; kein Fallback zum ersten Administrator. Diese Angaben ersetzen die ältere Zuordnungsbeschreibung oben.
+
+Der neue ECG-Sender verwendet den bestehenden Bearer-Kanal, prüft HTTP-Erfolg und `{ok:true,synced}` auf vollständige Übernahme und sendet große Listen in 500er-Blöcken. Speicherung in ECG bleibt bei Übertragungsfehlern erhalten; die ECG-Maske unterscheidet bestätigt, offen, nicht eingerichtet und nicht zuständig. Wiederholen ist manuell und beim nächsten normalen ECG-Speichern möglich, nicht über einen dauerhaften Hintergrundjob. Bestehende externe IDs ermöglichen idempotente Wiederholung. Weiterhin kein automatischer Löschabgleich oder Rückkanal.
+
+Prüfung: Empfängercode auf main gelesen; Vertrag und Fehlerpfade im ECG-Projekt mit synthetischen Tests geprüft. Keine echten Testbuchungen und kein angemeldeter End-to-End-Test mit beiden Produktivsystemen. Veröffentlichung des Sprachfeatures siehe ECG-PROJEKTSTAND.md. Dieser Nachtrag ändert ausschließlich Dokumentation.
