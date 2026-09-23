@@ -23,6 +23,15 @@ async function createOrganizationSchema(){
   await sql`ALTER TABLE org_time_entries ADD COLUMN IF NOT EXISTS approval_status text NOT NULL DEFAULT 'confirmed'`;
   await sql`ALTER TABLE org_time_entries ADD COLUMN IF NOT EXISTS hourly_rate_cents integer`;
   await sql`ALTER TABLE org_time_entries ADD COLUMN IF NOT EXISTS travel_flat_cents integer`;
+  await sql`CREATE TABLE IF NOT EXISTS org_ecg_issue_plans(
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(), owner_id uuid NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,
+    external_id text NOT NULL, title text NOT NULL, location text, issue_priority text NOT NULL DEFAULT 'normal',
+    issue_status text NOT NULL DEFAULT 'open', estimated_minutes integer, planning_priority text NOT NULL DEFAULT 'normal',
+    notes text, blocked boolean NOT NULL DEFAULT false, source_updated_at timestamptz,
+    created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(),
+    UNIQUE(owner_id,external_id)
+  )`;
+  await sql`CREATE INDEX IF NOT EXISTS org_ecg_issue_plans_owner_idx ON org_ecg_issue_plans(owner_id,issue_status,planning_priority)`;
   await sql`CREATE TABLE IF NOT EXISTS org_schedule_entries(
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(), owner_id uuid NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,
     category text NOT NULL DEFAULT 'appointment', title text NOT NULL, starts_at timestamptz NOT NULL, ends_at timestamptz,

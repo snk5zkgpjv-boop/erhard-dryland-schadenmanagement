@@ -34,3 +34,10 @@ Am 14.09.2026 Quellcode des ECG-Empfängers, Organisationsdaten-Endpunkts, UI-Fe
 ## Fortsetzung
 
 Zeit-Sync inklusive Fehlern, Benutzerzuordnung und Löschverhalten testen. Angebots-/Rechnungsübergabe und Artikel-KI als eigenen Auftrag mit dem Fachmodul abstimmen. Nach bestätigten Änderungen diese Datei aktualisieren.
+
+
+## ECG-Mängelplanung – 23.09.2026
+
+Feature-Branch ergänzt `org_ecg_issue_plans` und den Bearer-geschützten Empfänger `POST /api/organization/ecg-planning-sync`. Private ECG-Aufwandsschätzungen werden dem Organisationskonto über die konfigurierte Eigentümer-E-Mail zugeordnet und auf „Heute“ als offene ECG-Aufgaben samt geplanter Gesamtdauer und Anzahl ungeschätzter Aufgaben angezeigt. Sie bleiben von `org_time_entries` getrennt und zählen daher erst nach tatsächlicher Zeiterfassung als geleistete Wochenzeit. Der bestehende ECG-Zeitimport wurde ebenfalls von „erster aktiver Administrator“ auf explizite E-Mail-Zuordnung umgestellt.
+
+Feature-Branch noch nicht als Live-Stand behaupten; Build, Vorschau und Produktionsfreigabe separat nachweisen.
