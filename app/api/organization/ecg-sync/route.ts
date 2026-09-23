@@ -10,8 +10,8 @@ function validToken(request:Request){
 export async function POST(request:Request){
   if(!validToken(request))return Response.json({error:"Ungültiger Synchronisationsschlüssel."},{status:401});
   try{
-    await ensureOrganizationSchema();const body=await request.json(),entries=Array.isArray(body.entries)?body.entries:[];const sql=getSql();
-    const users=await sql`SELECT id FROM app_users WHERE role='admin' AND active=true ORDER BY created_at LIMIT 1`;if(!users.length)return Response.json({error:"Kein Administrator eingerichtet."},{status:503});const ownerId=String(users[0].id);let synced=0;
+    await ensureOrganizationSchema();const body=await request.json(),entries=Array.isArray(body.entries)?body.entries:[],ownerEmail=String(body.ownerEmail||"").trim().toLowerCase();const sql=getSql();
+    const users=ownerEmail?await sql`SELECT id FROM app_users WHERE active=true AND lower(email)=${ownerEmail} LIMIT 1`:[];if(!users.length)return Response.json({error:"Kein passendes Organisationskonto gefunden."},{status:503});const ownerId=String(users[0].id);let synced=0;
     for(const e of entries.slice(0,1000)){
       if(!e?.id||!e?.start)continue;
       const rows=await sql`INSERT INTO org_time_entries(owner_id,source,area,activity,location,notes,started_at,ended_at,volunteer,sunday,external_id)
