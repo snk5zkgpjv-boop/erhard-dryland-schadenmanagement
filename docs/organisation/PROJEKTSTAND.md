@@ -1,6 +1,6 @@
 # Projektstand – Organisationstool / Erhard Organisationszentrale
 
-Stand: 23.09.2026. Technische Übergabe; historische Releases und Prüfungen sind unten datiert. Diese Aktualisierung betrifft ausschließlich Dokumentation.
+Stand: 04.10.2026. Technische Übergabe; historische Releases und Prüfungen sind unten datiert. Diese Aktualisierung betrifft ausschließlich Dokumentation.
 
 ## Verantwortungsbereich
 
@@ -60,3 +60,12 @@ Nachübertragene Daten wurden per Datenbankabfrage geprüft; aktualisierte ECG-W
 Wichtig: Direkte SQL-Ergänzungen in der ECG-Datenbank lösen den API-basierten Zeit-Sync nicht aus. Nach einer solchen Ergänzung die autorisierte Übertragung gesondert ausführen und den Empfänger prüfen. Automatischen Sync und echten Sprach-/Mikrofonablauf weiterhin gesondert testen. Keine Rechnung wurde durch die Zeitnachträge erzeugt.
 
 AGENTS.md verlangt jetzt ausdrücklich die Pflege dieses Projektstands vor Abschluss technischer Änderungen, auch in neuen Chats. Reine Zeitbuchungen bleiben in der Datenbank und benötigen keinen öffentlichen Commit pro Einsatz. Kein Hintergrunddienst zur Erkennung externer Änderungen eingerichtet.
+
+
+## Diagnose ECG-Zeitübertragung – 04.10.2026
+
+Produktionslogs des Organisationsempfängers zeigen wiederholte POST /api/organization/ecg-sync mit HTTP 503. Der zugehörige veröffentlichte Empfängercode und die Middleware wurden anhand des Produktionscommits gelesen: Die Route ist von der normalen Sitzungsprüfung ausgenommen; ihr expliziter 503-Pfad bedeutet, dass kein aktives app_users-Konto zur übermittelten ownerEmail gefunden wurde. Dies grenzt den Fehler auf die Eigentümerzuordnung ein; ob die E-Mail fehlt, abweicht oder das Konto inaktiv ist, wurde nicht durch Datenbankabgleich bestätigt. Andere Route-Fehler liefern 401 oder 500.
+
+Sendercode auf main geprüft: Synchronisation erfolgt nach API-Speicherungen, direkte SQL-Zeitnachträge lösen sie nicht aus. Kein dauerhafter Hintergrundabgleich oder Löschabgleich vorhanden. Die benötigten Produktions-Konfigurationsnamen sind in Vercel vorhanden; geschützte Werte wurden vom Connector nicht ausgegeben. Der verfügbare Neon-Connector verlangt eine konkrete Projekt-ID und bietet keine Projektauflistung; kein authentifizierter Neon-CLI-Zugang vorhanden. Deshalb keine Prüfung der konkreten Zeitlisten, kein Kontofix und keine Nachübertragung ausgeführt. Kein neuer Funktionsstand veröffentlicht; dies ist ausschließlich ein Diagnose-/Dokumentationsnachtrag.
+
+Nächster Schritt: Projektzuordnung der Produktionsdatenbanken herstellen, konfigurierte Eigentümer-E-Mail mit aktivem Organisationskonto abgleichen, fehlende Quellkennungen idempotent nachübertragen und automatische API-Übertragung Ende-zu-Ende prüfen. Für direkte Datenbanknachträge bleibt zusätzlich ein verlässlicher Abgleich erforderlich. Keine privaten Betriebsdaten oder Zugangsdaten in dieser Dokumentation.
