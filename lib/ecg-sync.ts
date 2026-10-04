@@ -23,9 +23,16 @@ export async function importEcgTimes(ownerId:string,raw:unknown){
   RETURNING *`;
   if(rows.length){changed++;await audit(ownerId,"time",String(rows[0].id),"ecg_sync",rows[0]);}
  }
- return {synced:entries.length,changed};
+ const ids=entries.map(e=>String(e.id));
+ const stored=await sql`SELECT external_id,activity,location,notes,started_at,ended_at,volunteer FROM org_time_entries WHERE owner_id=${ownerId} AND source='ecg' AND deleted_at IS NULL AND external_id=ANY(${ids}::text[])`;
+ const byId=new Map(stored.map(r=>[String(r.external_id),r]));
+ for(const e of entries){
+  const r=byId.get(String(e.id));
+  if(!r||Date.parse(r.started_at)!==Date.parse(e.start)||Date.parse(r.ended_at)!==Date.parse(e.end)||r.activity!==String(e.workLabel||"ECG Hausmeistertätigkeit")||r.notes!==(String(e.note||"")||null)||r.volunteer!==!!e.volunteer)throw new Error("ECG-Nachübertragung konnte nicht vollständig bestätigt werden.");
+ }
+ return {synced:entries.length,changed,verified:entries.length};
 }
-type Result={status:string;count?:number;changed?:number;checkedAt?:string;error?:string};
+type Result={status:string;count?:number;changed?:number;verified?:number;checkedAt?:string;error?:string};
 const pending=new Map<string,Promise<Result>>();
 export function refreshEcgTimes(ownerId:string):Promise<Result>{
  const current=pending.get(ownerId);if(current)return current;
@@ -48,6 +55,6 @@ async function refresh(ownerId?:string):Promise<Result>{
   const linkedOwner=await resolveEcgOwner(body.ownerEmail.trim().toLowerCase(),entries);
   if(ownerId&&linkedOwner!==ownerId)return {status:"not_applicable"};
   const result=await importEcgTimes(linkedOwner,entries);
-  return {status:"synced",count:result.synced,changed:result.changed,checkedAt:new Date().toISOString()};
+  return {status:"synced",count:result.synced,changed:result.changed,verified:result.verified,checkedAt:new Date().toISOString()};
  }catch(error){return {status:"pending",error:error instanceof Error?error.message:"ECG-Abgleich fehlgeschlagen."};}
 }
