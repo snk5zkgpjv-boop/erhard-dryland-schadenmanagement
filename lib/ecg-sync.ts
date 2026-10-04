@@ -28,7 +28,7 @@ export async function importEcgTimes(ownerId:string,raw:unknown){
  const byId=new Map(stored.map(r=>[String(r.external_id),r]));
  for(const e of entries){
   const r=byId.get(String(e.id));
-  if(!r||Date.parse(r.started_at)!==Date.parse(e.start)||Date.parse(r.ended_at)!==Date.parse(e.end)||r.activity!==String(e.workLabel||"ECG Hausmeistertätigkeit")||r.notes!==(String(e.note||"")||null)||r.volunteer!==!!e.volunteer)throw new Error("ECG-Nachübertragung konnte nicht vollständig bestätigt werden.");
+  if(!r||new Date(r.started_at).getTime()!==Date.parse(e.start)||new Date(r.ended_at).getTime()!==Date.parse(e.end)||r.activity!==String(e.workLabel||"ECG Hausmeistertätigkeit")||r.notes!==(String(e.note||"")||null)||r.volunteer!==!!e.volunteer)throw new Error("ECG-Nachübertragung konnte nicht vollständig bestätigt werden.");
  }
  return {synced:entries.length,changed,verified:entries.length};
 }
