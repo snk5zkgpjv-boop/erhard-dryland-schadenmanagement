@@ -1,10 +1,11 @@
+import {refreshEcgTimes} from "@/lib/ecg-sync";
 import {getSql} from "@/lib/db";
 import {ensureOrganizationSchema,requestOwnerId} from "@/lib/organization";
 
 export const runtime="nodejs";
 export async function GET(request:Request){
   try{
-    const ownerId=requestOwnerId(request);await ensureOrganizationSchema();const sql=getSql();
+    const ownerId=requestOwnerId(request);await ensureOrganizationSchema();const ecgSync=await refreshEcgTimes(ownerId);const sql=getSql();
     await sql`INSERT INTO org_settings(owner_id) VALUES(${ownerId}) ON CONFLICT(owner_id) DO NOTHING`;
     const [time,finance,reserves,next,settings,mail,ecgPlans]=await Promise.all([
       sql`SELECT
@@ -22,6 +23,7 @@ export async function GET(request:Request){
     const s=settings[0] as any,t=time[0] as any;
     const credited=Math.min(Number(s.ecg_presence_credit_minutes),Number(s.ecg_weekly_target_minutes));
     return Response.json({
+      ecg_sync:ecgSync,
       week_minutes:Number(t.week_minutes),ecg_week_minutes:Number(t.ecg_week_minutes),volunteer_minutes:Number(t.volunteer_minutes),
       ecg_target_minutes:Number(s.ecg_weekly_target_minutes),ecg_presence_credit_minutes:credited,
       ecg_remaining_minutes:Math.max(0,Number(s.ecg_weekly_target_minutes)-credited-Number(t.ecg_week_minutes)),

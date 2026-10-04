@@ -24,8 +24,17 @@ function duration(m:any){const n=Math.round(Number(m||0));return `${Math.floor(n
 export default function OrganizationHub({displayName}:{displayName:string}){
  const[tab,setTab]=useState<string>("today"),[items,setItems]=useState<any[]>([]),[summary,setSummary]=useState<any>(null),[form,setForm]=useState<any>(defaults.time),[editing,setEditing]=useState<string|null>(null),[trash,setTrash]=useState(false),[status,setStatus]=useState(""),[error,setError]=useState(""),[busy,setBusy]=useState(false),[documentImage,setDocumentImage]=useState("");
  const entity=(tab==="today"?"time":tab) as Entity;
- async function load(next=entity,announce=false){setBusy(true);setError("");try{const[r,s]=await Promise.all([fetch(`/api/organization/data?entity=${next}&trash=${trash?1:0}`,{cache:"no-store"}),fetch("/api/organization/summary",{cache:"no-store"})]);if(!r.ok)throw new Error((await r.json()).error);setItems(await r.json());if(s.ok)setSummary(await s.json());if(announce)setStatus("Daten wurden aktualisiert.")}catch(e){setError(e instanceof Error?e.message:"Fehler beim Laden") }finally{setBusy(false)}}
- useEffect(()=>{if(tab!=="today")load(entity);else fetch("/api/organization/summary",{cache:"no-store"}).then(r=>r.json()).then(setSummary).catch(()=>{})},[tab,trash]);
+ async function load(next=entity,announce=false){setBusy(true);setError("");try{
+  // The summary awaits ECG reconciliation before either view reads the times.
+  const s=await fetch("/api/organization/summary",{cache:"no-store"}),j=await s.json();
+  if(!s.ok)throw new Error(j.error||"Übersicht konnte nicht geladen werden.");
+  setSummary(j);
+  const r=await fetch(`/api/organization/data?entity=${next}&trash=${trash?1:0}`,{cache:"no-store"});
+  if(!r.ok)throw new Error((await r.json()).error);setItems(await r.json());
+  if(j.ecg_sync?.status==="pending"||j.ecg_sync?.status==="not_configured")setError(j.ecg_sync.error||"ECG-Zeiten konnten nicht aktualisiert werden. Angezeigt wird der bisherige Stand.");
+  if(announce)setStatus(j.ecg_sync?.status==="synced"?"Daten und ECG-Zeiten wurden aktualisiert.":"Daten wurden aktualisiert.");
+ }catch(e){setError(e instanceof Error?e.message:"Fehler beim Laden")}finally{setBusy(false)}}
+ useEffect(()=>{load(entity)},[tab,trash]);
  function choose(next:string){setTab(next);setEditing(null);setForm(defaults[(next==="today"?"time":next) as Entity]);setStatus("");setError("")}
  function change(name:string,value:any){setForm((f:any)=>({...f,[name]:value}))}
  function edit(item:any){const copy={...item};for(const key of ["started_at","ended_at","starts_at","ends_at"])if(copy[key])copy[key]=inputDate(copy[key]);if(item.amount_cents!=null)copy.amount=Number(item.amount_cents)/100;if(item.target_cents!=null)copy.target_amount=Number(item.target_cents)/100;if(item.saved_cents!=null)copy.saved_amount=Number(item.saved_cents)/100;if(item.monthly_allowance_cents!=null)copy.monthly_allowance=Number(item.monthly_allowance_cents)/100;if(item.hourly_rate_cents!=null)copy.hourly_rate=Number(item.hourly_rate_cents)/100;if(item.travel_flat_cents!=null)copy.travel_flat=Number(item.travel_flat_cents)/100;setForm(copy);setEditing(item.id);window.scrollTo({top:230,behavior:"smooth"})}
