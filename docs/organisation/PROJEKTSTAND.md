@@ -19,7 +19,7 @@ Empfänger: `POST /api/organization/ecg-sync`; gemeinsamer Bearer-Schlüssel `OR
 - Idempotenz durch `(owner_id,source,external_id)`; wiederholte Übertragung aktualisiert Inhalt.
 - Keine Löschweitergabe allein aufgrund fehlender Quelleinträge; kein Rückkanal nach ECG.
 - Fehler: ungültiger Schlüssel 401; kein passendes Konto 503; sonstiger Verarbeitungsfehler 500. Sender prüft HTTP-Status und bestätigte Anzahl.
-- Konfiguration und reale Synchronisation nicht Ende-zu-Ende geprüft.
+- Aktualisierung 04.10.2026: Produktiver ECG-Export, Empfänger, Übernahme und Rücklesen erfolgreich geprüft; Abgleich beim Öffnen implementiert. Angemeldeter Browser-/iPhone-Test offen. Historische Einschränkungen unten sind datiert.
 
 ## Weitere Verbindungen und Abgrenzungen
 
@@ -84,3 +84,10 @@ Tatsächlich geprüft: synthetische Node-Prüfungen für Schlüssel, Quellfilter
 Produktionsnachweis: Beide Funktionsstände am Produktivalias READY. Organisation-Build einschließlich TypeScript-Prüfung bestanden. Produktiver Instanzstart meldete erfolgreichen ECG-Abgleich; fehlende bzw. geänderte Buchungen wurden übernommen. Node-Integrationstest des tatsächlichen Synchronisationsmoduls mit synthetischer Datenbank bestätigt historische Verknüpfung, Import/Rücklesen, unveränderte Wiederholung ohne doppeltes Audit, Ausschluss fremder Eigentümer und Datenerhalt bei HTTP-Fehler. Der Import liest zur Bestätigung die betroffenen Quellkennungen und Inhalte aus der Empfängerdatenbank zurück. Persönliche Mengen/Zeitinhalte bleiben außerhalb dieser öffentlichen Dokumentation.
 
 Robustheitsnachtrag: Die Rückleseprüfung erhält Millisekunden bei vom Datenbanktreiber gelieferten Date-Objekten (synthetische Date-/ISO-Prüfung bestanden). Im produktiven Wiederholungsversuch traten beim ECG-Abruf Zeitüberschreitungen auf; ECG liest deshalb für diesen Export nur users/timeEntries als JSONB-Projektion statt des vollständigen App-Zustands einschließlich Fotos. Abschließende Produktionsprüfung dieser Korrekturen folgt separat.
+
+
+## Abschließender Produktionsnachweis – 04.10.2026
+
+Die Funktionsstände mit präziser Zeitstempelprüfung und minimaler ECG-JSONB-Abfrage sind live READY. Produktiver erneuter Abgleich meldet synced und vollständige Rücklese-Verifikation der übertragenen Quellkennungen und Inhalte; unveränderte Wiederholung ohne Änderungen. Regulärer POST /api/organization/ecg-sync ebenfalls HTTP 200 bestätigt. Die zuvor protokollierten Zeitüberschreitungen und die fehlerhafte Date-Objekt-Prüfung wurden korrigiert; der nachfolgende reale Export-/Empfänger-/Datenbanklauf war erfolgreich.
+
+Beim Öffnen/Wechseln/Aktualisieren der Organisationsoberfläche läuft der Abgleich vor dem Laden der Zeitliste; Wochenübersicht berechnet sich danach. Bei Fehler bleibt der bisherige Datenstand erhalten und die Oberfläche zeigt den Fehler. Quellfilter, Bearer-Grenze, Kontozuordnung, Idempotenz und Fehlerverhalten synthetisch geprüft. Kein angemeldeter Browser-/iPhone-Test dieser Oberfläche durchgeführt. Keine privaten Einträge in Git dokumentiert. Dieser letzte Nachtrag ändert ausschließlich Dokumentation.
